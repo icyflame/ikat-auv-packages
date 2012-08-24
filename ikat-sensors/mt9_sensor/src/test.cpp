@@ -8,7 +8,7 @@ int main(int argc, char** argv)
     ros::Rate loop_rate(1);
     ros::Publisher publisher = n.advertise<ikat_sensor_data::mt9_sensor_data>("Orientation_data_from_MT9",10);
     ikat_sensor_data::mt9_sensor_data data;
-    ikat_sensor::MT9Sensor mt9("");
+    ikat_sensor::MT9Sensor mt9("/dev/ttyUSB0");
     ROS_INFO("sensor inint");
     if(mt9.startDataProcessing())
     {
@@ -23,6 +23,5 @@ int main(int argc, char** argv)
             ROS_INFO("looping");
         }
     }
-    //mt9.~MT9Sensor();
     return 0;
 }
