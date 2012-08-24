@@ -1,0 +1,18 @@
+<package>
+  <description brief="ikat_sensor_data">
+
+     ikat_sensor_data
+
+  </description>
+  <author>vinay</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/ikat_sensor_data</url>
+  <depend package="roscpp"/>
+  <depend package="std_msgs"/>
+  <export>
+    <cpp cflags="-I${prefix}/msg/cpp"/>
+  </export>
+</package>
+
+
