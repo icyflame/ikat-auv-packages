@@ -1,0 +1,16 @@
+<package>
+  <description brief="mt9_sensor">
+
+     mt9_sensor
+
+  </description>
+  <author>vinay</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/mt9_sensor</url>
+  <depend package="roscpp"/>
+  <depend package="ikat_sensor_data"/>
+
+</package>
+
+

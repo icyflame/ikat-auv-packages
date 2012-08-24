@@ -1,0 +1,19 @@
+<package>
+  <description brief="depth_sensor">
+
+     depth_sensor
+
+  </description>
+  <author>vinay</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/depth_sensor</url>
+  <depend package="roscpp"/>
+  <depend package="serialport"/>
+  <depend package="ikat_sensor_data"/>
+  <export>
+    <cpp cflags="-I${prefix}/include/" lflags="-Wl,-rpath,${prefix}/lib -L${prefix}/lib -ldepth_sensor" />
+  </export>
+</package>
+
+
