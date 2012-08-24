@@ -111,7 +111,11 @@ bool MT9Sensor::getData(ikat_sensor_data::mt9_sensor_data &dataptr)
         switch(nNew)
         {
             case MT_NEWDATA:
-                data = fOrientationData;
+                ROS_INFO_STREAM("ROll :" <<fOrientationData[0]<<" Pitch :"<<fOrientationData[1]<<" Yaw :" <<fOrientationData[2]);
+                for(int i=0;i<10;i++)
+                {
+                    data[i]=fOrientationData[i];
+                }
                 break;
             case MT_NODATA:
                 ROS_ERROR("No Data On COM Port\n\n");
