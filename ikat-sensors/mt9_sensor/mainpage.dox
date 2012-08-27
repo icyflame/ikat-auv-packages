@@ -11,7 +11,7 @@ Provide an overview of your package.
 -->
 
 
-download libstdc++ 5.0 before running the package 
+download libstdc++ 5.0 before running the packag
 ikat_sensor_data package must be also build before bulding the mt9_test 
 
 */
