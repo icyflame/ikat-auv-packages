@@ -1,0 +1,16 @@
+<package>
+  <description brief="ikat_controller">
+
+     ikat_controller
+
+  </description>
+  <author>siddhartha</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/ikat_controller</url>
+  <depend package="roscpp"/>
+  <depend package="serialport"/>
+
+</package>
+
+
