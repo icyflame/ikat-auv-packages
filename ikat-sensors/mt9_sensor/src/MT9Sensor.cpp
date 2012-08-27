@@ -63,6 +63,7 @@ bool MT9Sensor::setupFilter()
         pMT->MT_SetTimeout(3);
         pMT->MT_SetSampleFrequency(nSampleFrequency);
         pMT->MT_SetOutputMode(nMode);
+	pMT->MT_SetDoAMD(1);
         ROS_INFO("MT9 initiated succesfully");
         data_is_streaming = true;
         ROS_INFO("%d",i);
