@@ -1,0 +1,8 @@
+<stack>
+  <description brief="iKAT">iKAt</description>
+  <author>Maintained by IIT Kharagpur AUV team</author>
+  <license>BSD</license>  
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/physical_interaction_framework</url>
+  <depend stack="ros" />
+</stack>
