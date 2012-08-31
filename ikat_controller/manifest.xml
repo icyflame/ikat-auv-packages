@@ -10,6 +10,7 @@
   <url>http://ros.org/wiki/ikat_controller</url>
   <depend package="roscpp"/>
   <depend package="serialport"/>
+  <depend package="ikat_sensor_data"/>
 
 </package>
 
