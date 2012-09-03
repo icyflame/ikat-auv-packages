@@ -1,0 +1,18 @@
+<package>
+  <description brief="ikat_thrusters">
+
+     ikat_thrusters
+
+  </description>
+  <author>Vinay Yadav</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/ikat_thrusters</url>
+  <depend package="roscpp"/>
+  <depend package="serialport"/>
+  <export>
+    <cpp cflags="-I${prefix}/include/" lflags="-Wl,-rpath,${prefix}/lib -L${prefix}/lib -likat_thrusters" />
+  </export>
+</package>
+
+
