@@ -3,7 +3,7 @@
 #include <ikat_sensor_data/depth_sensor_data.h>
 #include <ikat_sensor_data/mt9_sensor_data.h>
 #include <ikat_controller/Technadyne.h>
-
+//#include <ikat_thrusters/Thrusters.hpp>
 
 #define CH0 0x00
 #define CH1 0x01
@@ -17,6 +17,7 @@
 
 // Thrusters definition
 using namespace std;
+//using namespace ikat_hardware;
 class controller
 {
  public:
@@ -36,15 +37,19 @@ class controller
     float roll_mt9,pitch_mt9, yaw_mt9;
     float steady_angle;
     float KP_YAW,KI_YAW,KD_YAW,error_yaw,sum_yaw,prev_error_yaw,diff_yaw;
-    float horizontal_speed,theta_relative,differential_speed;
+    float theta_relative;
     int   no_of_times_from_begining_for_mt9;
+    /////////////////////////////////////////////////////
+
+    //thruster varables
+    float horizontal_speed,differential_surge_speed,thruster_surge_left,thruster_surge_right;
+
     //////////////////////////////////////////////////////
     /////member functions
     //////////////////////////////////////////////////////
-
-
     controller();
-    void yawController( float,float,float,float);
+    void yawController( float );
+    void yawController( float x_coordinate,float y_coordinate,float KP_YAW_IMAGE,float KI_YAW_IMAGE,float KD_YAW_IMAGE );
     void depthController();
 
 } obj;
@@ -67,8 +72,13 @@ controller::controller()
     roll_mt9=0,pitch_mt9=0, yaw_mt9=0;
     steady_angle =0;
     KP_YAW=0.14,KI_YAW=0.00,KD_YAW=.1,error_yaw=0,sum_yaw=0,prev_error_yaw=0.0,diff_yaw=0.0;
-    horizontal_speed=0,theta_relative=0,differential_speed=0;
+    theta_relative=0;
     no_of_times_from_begining_for_mt9=0;
+
+    ////////////////////////////////////////////////////
+    ///thrusters variables
+    ////////////////////////////////////////////////////
+    horizontal_speed=0,differential_surge_speed=0,thruster_surge_left=0,thruster_surge_right=0;
 }
 
 void depthCallback(const ikat_sensor_data::depth_sensor_data::ConstPtr& msg)
@@ -110,7 +120,7 @@ void mt9Callback(const ikat_sensor_data::mt9_sensor_data::ConstPtr& msg)
     ROS_INFO("Pitch [%f]     ",obj.pitch_mt9);
     ROS_INFO("Yaw [%f]       ",obj.yaw_mt9);
 }
-void controller::yawController( float steady_angle,float KP_YAW,float KI_YAW,float KD_YAW )
+void controller::yawController( float steady_angle )
 {
     if(no_of_times_from_begining_for_mt9<=5)
         steady_angle=yaw_mt9;
@@ -125,9 +135,46 @@ void controller::yawController( float steady_angle,float KP_YAW,float KI_YAW,flo
     sum_yaw+=error_yaw;
     diff_yaw=error_yaw-prev_error_yaw;
     prev_error_yaw=error_yaw;
-    differential_speed=KP_YAW*error_yaw+KI_YAW*sum_yaw+KD_YAW*diff_yaw;
+    differential_surge_speed=KP_YAW*error_yaw+KI_YAW*sum_yaw+KD_YAW*diff_yaw;
 
 }
+
+void controller::yawController( float x_coordinate,float y_coordinate,float KP_YAW_IMAGE,float KI_YAW_IMAGE,float KD_YAW_IMAGE )
+{
+    //speed1=-0.25*angle;//-0.04*x_cor;
+    differential_surge_speed=0.25*x_coordinate;
+    thruster_surge_left=-differential_surge_speed+horizontal_speed;
+    thruster_surge_right= differential_surge_speed+horizontal_speed;
+    //cout<<"ERROR:"<<angle<<"\t"<<x_cor<<endl;
+    if(thruster_surge_left<0 && horizontal_speed==0)
+    {
+            thruster_surge_left-=2.1;
+    }
+    if(thruster_surge_right<0 && horizontal_speed==0)
+    {
+            thruster_surge_right-=2.1;
+    }
+    if(thruster_surge_left>0 && horizontal_speed==0)
+    {
+            thruster_surge_left+=2.1;
+    }
+    if(thruster_surge_right>0 && horizontal_speed==0)
+    {
+            thruster_surge_right+=2.1;
+    }
+    //////////when moving forward
+    if(thruster_surge_left<2.2 && horizontal_speed>0)
+    {
+            thruster_surge_left-=4.4;
+    }
+    if(thruster_surge_right<2.2 && horizontal_speed>0)
+    {
+            thruster_surge_right-=4.4;
+    }
+    //th.SendCommand(thrust1,SurgeLeftThruster);
+    //th.SendCommand(thrust2,SurgeRightThruster);
+}
+
 void controller::depthController()
 {
 
@@ -193,7 +240,7 @@ int main(int argc, char **argv)
   {
       ros::spinOnce();
 
-      obj.yawController(obj.steady_angle,obj.KP_YAW,obj.KD_YAW,obj.KI_YAW);
+      obj.yawController(obj.steady_angle);
       obj.depthController();
 
 
