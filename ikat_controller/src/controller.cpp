@@ -26,7 +26,7 @@ class controller
     /////////////////////////////////////////////////////
     float depth;
     float steady_depth;
-    float KP_DEPTH,KI_DEPTH,error_depth,sum_depth;
+    float KP_DEPTH,KI_DEPTH,error_depth,sum_depth,prev_error_depth,diff_depth;
     int   no_of_times_from_begining_for_depth_sensor;
     float DEPTH_AT_SURFACE;
     /////////////////////////////////////////////////////
@@ -51,10 +51,10 @@ class controller
     //////////////////////////////////////////////////////
     controller();
     void yawController();
-    void yawController( float x_coordinate,float y_coordinate,float KP_YAW_IMAGE,float KI_YAW_IMAGE,float KD_YAW_IMAGE );
-    void thrusterCallibration();
+    void yawController(float x_coordinate,float y_coordinate,float KP_YAW_IMAGE,float KI_YAW_IMAGE,float KD_YAW_IMAGE);
+    void speedCallibration();
     void depthController();
-
+    void depthController(float x_coordinate,float y_coordinate,float KP_DEPTH_IMAGE,float KI_DEPTH_IMAGE,float KD_DEPTH_IMAGE);
 } obj;
 
 controller::controller()
@@ -64,7 +64,7 @@ controller::controller()
     /////////////////////////////////////////////////////
     depth=0;
     steady_depth =0;
-    KP_DEPTH=5.5,KI_DEPTH=.3,error_depth=0,sum_depth=0;
+    KP_DEPTH=5.5,KI_DEPTH=.3,error_depth=0,sum_depth=0,prev_error_depth=0,diff_depth=0;
     no_of_times_from_begining_for_depth_sensor=0;
     DEPTH_AT_SURFACE=0;
     /////////////////////////////////////////////////////
@@ -141,7 +141,7 @@ void controller::yawController()
     differential_surge_speed=KP_YAW*error_yaw+KI_YAW*sum_yaw+KD_YAW*diff_yaw;
     thruster_surge_left=-differential_surge_speed+horizontal_speed;
     thruster_surge_right= differential_surge_speed+horizontal_speed;
-    thrusterCallibration();
+    speedCallibration();
 }
 
 void controller::yawController( float x_coordinate,float y_coordinate,float KP_YAW_IMAGE,float KI_YAW_IMAGE,float KD_YAW_IMAGE )
@@ -154,7 +154,7 @@ void controller::yawController( float x_coordinate,float y_coordinate,float KP_Y
     thruster_surge_left=-differential_surge_speed+horizontal_speed;
     thruster_surge_right= differential_surge_speed+horizontal_speed;
     //cout<<"ERROR:"<<x_coordinate<<endl;
-    thrusterCallibration();
+    speedCallibration();
 }
 
 void controller::depthController()
@@ -163,7 +163,16 @@ void controller::depthController()
     sum_depth=sum_depth+error_depth;
     vertical_speed=KP_DEPTH*error_depth+KI_DEPTH*sum_depth+3;
 }
-void controller::thrusterCallibration()
+void controller::depthController(float x_coordinate,float y_coordinate,float KP_DEPTH_IMAGE,float KI_DEPTH_IMAGE,float KD_DEPTH_IMAGE)
+{
+    error_depth=y_coordinate;
+    sum_depth=sum_depth+error_depth;
+    diff_depth=error_depth-prev_error_depth;
+    prev_error_depth=error_depth;
+    vertical_speed=KP_DEPTH_IMAGE*error_depth+KI_DEPTH_IMAGE*sum_depth+KD_DEPTH_IMAGE*diff_depth+3;
+}
+
+void controller::speedCallibration()
 {
     ///////////when still
     if(thruster_surge_left<0 && horizontal_speed==0)
