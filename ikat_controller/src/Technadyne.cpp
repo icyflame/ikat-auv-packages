@@ -51,8 +51,9 @@ void thruster::strcmb(double a,int b)
     str = buff;
 }
 
-bool thruster::sendData(void)
+bool thruster::sendCommand(double speed,int channel)
 {
+    strcmb(speed,channel);
     if(Serial.writeData(str)==byteswritten)
     {
         return true;
