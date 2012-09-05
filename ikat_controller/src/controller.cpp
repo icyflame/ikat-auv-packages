@@ -24,11 +24,11 @@ class controller
     /////////////////////////////////////////////////////
     ///Depth Sensor Variables
     /////////////////////////////////////////////////////
-    float depth,threshold;
+    float depth;
     float steady_depth;
     float KP_DEPTH,KI_DEPTH,error_depth,sum_depth;
     int   no_of_times_from_begining_for_depth_sensor;
-    float DEPTH_AT_SURFACE,vertical_speed;
+    float DEPTH_AT_SURFACE;
     /////////////////////////////////////////////////////
 
     /////////////////////////////////////////////////////
@@ -41,15 +41,18 @@ class controller
     int   no_of_times_from_begining_for_mt9;
     /////////////////////////////////////////////////////
 
-    //thruster varables
-    float horizontal_speed,differential_surge_speed,thruster_surge_left,thruster_surge_right;
+    ////////////////////////////////////////////////////
+    ///thrusters variables
+    ////////////////////////////////////////////////////
+    float horizontal_speed,vertical_speed,differential_surge_speed,thruster_surge_left,thruster_surge_right;
 
     //////////////////////////////////////////////////////
     /////member functions
     //////////////////////////////////////////////////////
     controller();
-    void yawController( float );
+    void yawController();
     void yawController( float x_coordinate,float y_coordinate,float KP_YAW_IMAGE,float KI_YAW_IMAGE,float KD_YAW_IMAGE );
+    void thrusterCallibration();
     void depthController();
 
 } obj;
@@ -59,11 +62,11 @@ controller::controller()
     /////////////////////////////////////////////////////
     ///Depth Sensor Variables
     /////////////////////////////////////////////////////
-    depth=0,threshold=4.0;
+    depth=0;
     steady_depth =0;
     KP_DEPTH=5.5,KI_DEPTH=.3,error_depth=0,sum_depth=0;
     no_of_times_from_begining_for_depth_sensor=0;
-    DEPTH_AT_SURFACE=0,vertical_speed=0;
+    DEPTH_AT_SURFACE=0;
     /////////////////////////////////////////////////////
 
     /////////////////////////////////////////////////////
@@ -78,7 +81,7 @@ controller::controller()
     ////////////////////////////////////////////////////
     ///thrusters variables
     ////////////////////////////////////////////////////
-    horizontal_speed=0,differential_surge_speed=0,thruster_surge_left=0,thruster_surge_right=0;
+    horizontal_speed=0,vertical_speed=0,differential_surge_speed=0,thruster_surge_left=0,thruster_surge_right=0;
 }
 
 void depthCallback(const ikat_sensor_data::depth_sensor_data::ConstPtr& msg)
@@ -120,7 +123,7 @@ void mt9Callback(const ikat_sensor_data::mt9_sensor_data::ConstPtr& msg)
     ROS_INFO("Pitch [%f]     ",obj.pitch_mt9);
     ROS_INFO("Yaw [%f]       ",obj.yaw_mt9);
 }
-void controller::yawController( float steady_angle )
+void controller::yawController()
 {
     if(no_of_times_from_begining_for_mt9<=5)
         steady_angle=yaw_mt9;
@@ -136,16 +139,33 @@ void controller::yawController( float steady_angle )
     diff_yaw=error_yaw-prev_error_yaw;
     prev_error_yaw=error_yaw;
     differential_surge_speed=KP_YAW*error_yaw+KI_YAW*sum_yaw+KD_YAW*diff_yaw;
-
+    thruster_surge_left=-differential_surge_speed+horizontal_speed;
+    thruster_surge_right= differential_surge_speed+horizontal_speed;
+    thrusterCallibration();
 }
 
 void controller::yawController( float x_coordinate,float y_coordinate,float KP_YAW_IMAGE,float KI_YAW_IMAGE,float KD_YAW_IMAGE )
 {
-    //speed1=-0.25*angle;//-0.04*x_cor;
-    differential_surge_speed=0.25*x_coordinate;
+    error_yaw=x_coordinate;
+    sum_yaw+=error_yaw;
+    diff_yaw=error_yaw-prev_error_yaw;
+    prev_error_yaw=error_yaw;
+    differential_surge_speed=KP_YAW_IMAGE*error_yaw + KI_YAW_IMAGE*sum_yaw + KD_YAW_IMAGE*diff_yaw;
     thruster_surge_left=-differential_surge_speed+horizontal_speed;
     thruster_surge_right= differential_surge_speed+horizontal_speed;
-    //cout<<"ERROR:"<<angle<<"\t"<<x_cor<<endl;
+    //cout<<"ERROR:"<<x_coordinate<<endl;
+    thrusterCallibration();
+}
+
+void controller::depthController()
+{
+    error_depth=-depth+steady_depth;
+    sum_depth=sum_depth+error_depth;
+    vertical_speed=KP_DEPTH*error_depth+KI_DEPTH*sum_depth+3;
+}
+void controller::thrusterCallibration()
+{
+    ///////////when still
     if(thruster_surge_left<0 && horizontal_speed==0)
     {
             thruster_surge_left-=2.1;
@@ -171,13 +191,6 @@ void controller::yawController( float x_coordinate,float y_coordinate,float KP_Y
     {
             thruster_surge_right-=4.4;
     }
-    //th.SendCommand(thrust1,SurgeLeftThruster);
-    //th.SendCommand(thrust2,SurgeRightThruster);
-}
-
-void controller::depthController()
-{
-
 }
 
 int main(int argc, char **argv)
@@ -228,33 +241,31 @@ int main(int argc, char **argv)
   thruster th("/dev/ttylUSB0",9600);
   if(th.startThrusters())
       cout<<"The serial port is not connected\n";
+
   /////////starting depth/////////////////
   obj.vertical_speed=4.0;
   th.sendCommand(obj.vertical_speed,DepthRightThruster);
   th.sendCommand(obj.vertical_speed,DepthLeftThruster);
   sleep(1);
   obj.vertical_speed=0;
-  /////////////////////
+  ///////////////////////////////////////
 
   while(ros::ok())
   {
       ros::spinOnce();
 
-      obj.yawController(obj.steady_angle);
+      obj.yawController();
       obj.depthController();
 
+      ///////////////////////////////////////////////
+      //////sending information to thrusters
+      ///////////////////////////////////////////////
+      th.sendCommand(obj.thruster_surge_left,SurgeLeftThruster);
+      th.sendCommand(obj.thruster_surge_right,SurgeRightThruster);
+      th.sendCommand(obj.vertical_speed,DepthRightThruster);
+      th.sendCommand(obj.vertical_speed,DepthLeftThruster);
 
-
-
-    if(th.sendCommand(2.5,SurgeLeftThruster))
-        cout<<"Thruster communication was successful\n";
-
-    sleep(30);//delay
-
-    if(th.sendCommand(0,SurgeLeftThruster))
-        cout<<"Thruster stopped successfully \n";
-
-    loopRate.sleep();
+      loopRate.sleep();
 
   }
   return 0;
