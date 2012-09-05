@@ -13,6 +13,6 @@ public:
                 thruster(const std::string& port,int baudrate);
                 virtual ~thruster();
                 void strcmb(double,int);
-                bool sendData(void);
+                bool sendCommand(double,int);
                 bool startThrusters();
 };

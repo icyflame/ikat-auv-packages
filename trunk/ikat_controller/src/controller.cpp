@@ -10,6 +10,11 @@
 #define CH2 0x02
 #define CH3 0x03
 
+#define SurgeLeftThruster	CH0
+#define SurgeRightThruster	CH2
+#define DepthRightThruster	CH3
+#define DepthLeftThruster	CH1
+
 // Thrusters definition
 using namespace std;
 /////////////////////////////////////////////////////
@@ -19,7 +24,7 @@ float depth=0,threshold=4.0;
 float steady_depth =0;
 float KP_DEPTH=5.5,KI_DEPTH=.3,error_depth=0,sum_depth=0;
 int   no_of_times_from_begining_for_depth_sensor=0;
-float DEPTH_AT_SURFACE=0;
+float DEPTH_AT_SURFACE=0,vertical_speed=0;
 /////////////////////////////////////////////////////
 
 /////////////////////////////////////////////////////
@@ -28,7 +33,7 @@ float DEPTH_AT_SURFACE=0;
 float roll_mt9=0,pitch_mt9=0, yaw_mt9=0;
 float steady_angle =0;
 float KP_YAW=0.14,KI_YAW=0.00,KD_YAW=.1,error_yaw=0,sum_yaw=0,prev_error_yaw=0.0,diff_yaw=0.0;
-float horizontal_speed=0,theta_relative=0;
+float horizontal_speed=0,theta_relative=0,differential_speed;
 int   no_of_times_from_begining_for_mt9=0;
 //////////////////////////////////////////////////////
 void depthCallback(const ikat_sensor_data::depth_sensor_data::ConstPtr& msg)
@@ -69,6 +74,25 @@ void mt9Callback(const ikat_sensor_data::mt9_sensor_data::ConstPtr& msg)
     ROS_INFO("Roll [%f]      ",roll_mt9);
     ROS_INFO("Pitch [%f]     ",pitch_mt9);
     ROS_INFO("Yaw [%f]       ",yaw_mt9);
+}
+void yawController( float steady_angle,float KP_YAW,float KI_YAW,float KD_YAW )
+{
+    if(no_of_times_from_begining_for_mt9<=5)
+        steady_angle=yaw_mt9;
+    if(steady_angle>360)
+        steady_angle-=360;
+    if(steady_angle<0)
+        steady_angle+=360;
+    error_yaw=steady_angle-yaw_mt9;
+    sum_yaw+=error_yaw;
+    diff_yaw=error_yaw-prev_error_yaw;
+    prev_error_yaw=error_yaw;
+    differential_speed=KP_YAW*error_yaw+KI_YAW*sum_yaw+KD_YAW*diff_yaw;
+
+}
+void depthController()
+{
+
 }
 
 int main(int argc, char **argv)
@@ -115,32 +139,35 @@ int main(int argc, char **argv)
    * will exit when Ctrl-C is pressed, or the node is shutdown by the master.
    */
   ros::Rate loopRate(1);
+  thruster th("/dev/ttylUSB0",9600);
+  if(th.startThrusters())
+      cout<<"The serial port is not connected\n";
+  /////////starting depth/////////////////
+  vertical_speed=4.0;
+  th.sendCommand(vertical_speed,DepthRightThruster);
+  th.sendCommand(vertical_speed,DepthLeftThruster);
+  sleep(1);
+  vertical_speed=0;
+  /////////////////////
+
   while(ros::ok())
   {
       ros::spinOnce();
-      if(no_of_times_from_begining_for_mt9<=5)
-          steady_angle=yaw_mt9;
 
-      if(steadyAngle>360)
-          steadyAngle-=360;
-      if(steadyAngle<0)
-          steadyAngle+=360;
-   error_yaw= steady_angle-yaw_mt9;
-   sum_yaw+=error_yaw;
-   diff_yaw=error_yaw-prev_error_yaw;
-   prev_error_yaw=error_yaw;
-   speed1=KP_YAW*error_yaw+KI_YAW_*sum_yaw+KD_YAW*diff_yaw;
+      yawController(steady_angle,KP_YAW,KD_YAW,KI_YAW);
+      depthController();
 
-    thruster th("/dev/ttylUSB0",9600);
-    if(th.startThrusters())
-        cout<<"The serial port is not connected\n";
-    th.strcmb(CH0,2.5);
-    if(th.sendData())
+
+
+
+    if(th.sendCommand(2.5,SurgeLeftThruster))
         cout<<"Thruster communication was successful\n";
-    sleep(30);
-    th.strcmb(CH0,0);
-    if(th.sendData())
+
+    sleep(30);//delay
+
+    if(th.sendCommand(0,SurgeLeftThruster))
         cout<<"Thruster stopped successfully \n";
+
     loopRate.sleep();
 
   }
