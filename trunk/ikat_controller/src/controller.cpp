@@ -17,26 +17,38 @@
 
 // Thrusters definition
 using namespace std;
-/////////////////////////////////////////////////////
-///Depth Sensor Variables
-/////////////////////////////////////////////////////
-float depth=0,threshold=4.0;
-float steady_depth =0;
-float KP_DEPTH=5.5,KI_DEPTH=.3,error_depth=0,sum_depth=0;
-int   no_of_times_from_begining_for_depth_sensor=0;
-float DEPTH_AT_SURFACE=0,vertical_speed=0;
-/////////////////////////////////////////////////////
+class controller
+{
 
-/////////////////////////////////////////////////////
-///Mt9 variables
-/////////////////////////////////////////////////////
-float roll_mt9=0,pitch_mt9=0, yaw_mt9=0;
-float steady_angle =0;
-float KP_YAW=0.14,KI_YAW=0.00,KD_YAW=.1,error_yaw=0,sum_yaw=0,prev_error_yaw=0.0,diff_yaw=0.0;
-float horizontal_speed=0,theta_relative=0,differential_speed;
-int   no_of_times_from_begining_for_mt9=0;
-//////////////////////////////////////////////////////
-void depthCallback(const ikat_sensor_data::depth_sensor_data::ConstPtr& msg)
+    /////////////////////////////////////////////////////
+    ///Depth Sensor Variables
+    /////////////////////////////////////////////////////
+    float depth=0,threshold=4.0;
+    float steady_depth =0;
+    float KP_DEPTH=5.5,KI_DEPTH=.3,error_depth=0,sum_depth=0;
+    int   no_of_times_from_begining_for_depth_sensor=0;
+    float DEPTH_AT_SURFACE=0,vertical_speed=0;
+    /////////////////////////////////////////////////////
+
+    /////////////////////////////////////////////////////
+    ///Mt9 variables
+    /////////////////////////////////////////////////////
+    float roll_mt9=0,pitch_mt9=0, yaw_mt9=0;
+    float steady_angle =0;
+    float KP_YAW=0.14,KI_YAW=0.00,KD_YAW=.1,error_yaw=0,sum_yaw=0,prev_error_yaw=0.0,diff_yaw=0.0;
+    float horizontal_speed=0,theta_relative=0,differential_speed;
+    int   no_of_times_from_begining_for_mt9=0;
+    //////////////////////////////////////////////////////
+public:
+    void depthCallback(const ikat_sensor_data::depth_sensor_data::ConstPtr &msg);
+    void mt9Callback(const ikat_sensor_data::mt9_sensor_data::ConstPtr &msg);
+    void yawController( float steady_angle,float KP_YAW,float KI_YAW,float KD_YAW );
+    void depthController();
+
+};
+
+
+void controller::depthCallback(const ikat_sensor_data::depth_sensor_data::ConstPtr& msg)
 {
 
   if (no_of_times_from_begining_for_depth_sensor==5)
@@ -51,7 +63,7 @@ void depthCallback(const ikat_sensor_data::depth_sensor_data::ConstPtr& msg)
   ROS_INFO("depth: [%f]",depth);
 
 }
-void mt9Callback(const ikat_sensor_data::mt9_sensor_data::ConstPtr& msg)
+void controller::mt9Callback(const ikat_sensor_data::mt9_sensor_data::ConstPtr& msg)
 {
     roll_mt9=msg->MT9_data[0];
     pitch_mt9=msg->MT9_data[1];
@@ -75,7 +87,7 @@ void mt9Callback(const ikat_sensor_data::mt9_sensor_data::ConstPtr& msg)
     ROS_INFO("Pitch [%f]     ",pitch_mt9);
     ROS_INFO("Yaw [%f]       ",yaw_mt9);
 }
-void yawController( float steady_angle,float KP_YAW,float KI_YAW,float KD_YAW )
+void controller::yawController( float steady_angle,float KP_YAW,float KI_YAW,float KD_YAW )
 {
     if(no_of_times_from_begining_for_mt9<=5)
         steady_angle=yaw_mt9;
@@ -90,7 +102,7 @@ void yawController( float steady_angle,float KP_YAW,float KI_YAW,float KD_YAW )
     differential_speed=KP_YAW*error_yaw+KI_YAW*sum_yaw+KD_YAW*diff_yaw;
 
 }
-void depthController()
+void controller::depthController()
 {
 
 }
@@ -107,7 +119,9 @@ int main(int argc, char **argv)
    * You must call one of the versions of ros::init() before using any other
    * part of the ROS system.
    */
-  ros::init(argc, argv, "controller");
+  controller obj;
+    ros::init(argc, argv, "controller");
+
 
   /**
    * NodeHandle is the main access point to communications with the ROS system.
@@ -154,8 +168,8 @@ int main(int argc, char **argv)
   {
       ros::spinOnce();
 
-      yawController(steady_angle,KP_YAW,KD_YAW,KI_YAW);
-      depthController();
+      obj.yawController(steady_angle,KP_YAW,KD_YAW,KI_YAW);
+      obj.depthController();
 
 
 
