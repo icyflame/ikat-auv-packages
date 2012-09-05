@@ -19,82 +19,108 @@
 using namespace std;
 class controller
 {
-
+ public:
     /////////////////////////////////////////////////////
     ///Depth Sensor Variables
     /////////////////////////////////////////////////////
-    float depth=0,threshold=4.0;
-    float steady_depth =0;
-    float KP_DEPTH=5.5,KI_DEPTH=.3,error_depth=0,sum_depth=0;
-    int   no_of_times_from_begining_for_depth_sensor=0;
-    float DEPTH_AT_SURFACE=0,vertical_speed=0;
+    float depth,threshold;
+    float steady_depth;
+    float KP_DEPTH,KI_DEPTH,error_depth,sum_depth;
+    int   no_of_times_from_begining_for_depth_sensor;
+    float DEPTH_AT_SURFACE,vertical_speed;
     /////////////////////////////////////////////////////
 
     /////////////////////////////////////////////////////
     ///Mt9 variables
     /////////////////////////////////////////////////////
-    float roll_mt9=0,pitch_mt9=0, yaw_mt9=0;
-    float steady_angle =0;
-    float KP_YAW=0.14,KI_YAW=0.00,KD_YAW=.1,error_yaw=0,sum_yaw=0,prev_error_yaw=0.0,diff_yaw=0.0;
-    float horizontal_speed=0,theta_relative=0,differential_speed;
-    int   no_of_times_from_begining_for_mt9=0;
+    float roll_mt9,pitch_mt9, yaw_mt9;
+    float steady_angle;
+    float KP_YAW,KI_YAW,KD_YAW,error_yaw,sum_yaw,prev_error_yaw,diff_yaw;
+    float horizontal_speed,theta_relative,differential_speed;
+    int   no_of_times_from_begining_for_mt9;
     //////////////////////////////////////////////////////
-public:
-    void depthCallback(const ikat_sensor_data::depth_sensor_data::ConstPtr &msg);
-    void mt9Callback(const ikat_sensor_data::mt9_sensor_data::ConstPtr &msg);
-    void yawController( float steady_angle,float KP_YAW,float KI_YAW,float KD_YAW );
+    /////member functions
+    //////////////////////////////////////////////////////
+
+
+    controller();
+    void yawController( float,float,float,float);
     void depthController();
 
-};
+} obj;
 
+controller::controller()
+{
+    /////////////////////////////////////////////////////
+    ///Depth Sensor Variables
+    /////////////////////////////////////////////////////
+    depth=0,threshold=4.0;
+    steady_depth =0;
+    KP_DEPTH=5.5,KI_DEPTH=.3,error_depth=0,sum_depth=0;
+    no_of_times_from_begining_for_depth_sensor=0;
+    DEPTH_AT_SURFACE=0,vertical_speed=0;
+    /////////////////////////////////////////////////////
 
-void controller::depthCallback(const ikat_sensor_data::depth_sensor_data::ConstPtr& msg)
+    /////////////////////////////////////////////////////
+    ///Mt9 variables
+    /////////////////////////////////////////////////////
+    roll_mt9=0,pitch_mt9=0, yaw_mt9=0;
+    steady_angle =0;
+    KP_YAW=0.14,KI_YAW=0.00,KD_YAW=.1,error_yaw=0,sum_yaw=0,prev_error_yaw=0.0,diff_yaw=0.0;
+    horizontal_speed=0,theta_relative=0,differential_speed=0;
+    no_of_times_from_begining_for_mt9=0;
+}
+
+void depthCallback(const ikat_sensor_data::depth_sensor_data::ConstPtr& msg)
 {
 
-  if (no_of_times_from_begining_for_depth_sensor==5)
+  if (obj.no_of_times_from_begining_for_depth_sensor==5)
   {
-       DEPTH_AT_SURFACE=depth;
+       obj.DEPTH_AT_SURFACE=obj.depth;
   }
-  if(no_of_times_from_begining_for_depth_sensor<10)
-        no_of_times_from_begining_for_depth_sensor++;
+  if(obj.no_of_times_from_begining_for_depth_sensor<10)
+        obj.no_of_times_from_begining_for_depth_sensor++;
 
-  depth = msg->depth-DEPTH_AT_SURFACE;
+  obj.depth = msg->depth-obj.DEPTH_AT_SURFACE;
 
-  ROS_INFO("depth: [%f]",depth);
+  ROS_INFO("depth: [%f]",obj.depth);
 
 }
-void controller::mt9Callback(const ikat_sensor_data::mt9_sensor_data::ConstPtr& msg)
+void mt9Callback(const ikat_sensor_data::mt9_sensor_data::ConstPtr& msg)
 {
-    roll_mt9=msg->MT9_data[0];
-    pitch_mt9=msg->MT9_data[1];
-    yaw_mt9=msg->MT9_data[2];
-    if (yaw_mt9>0 && no_of_times_from_begining_for_mt9==5)
+    obj.roll_mt9=msg->MT9_data[0];
+    obj.pitch_mt9=msg->MT9_data[1];
+    obj.yaw_mt9=msg->MT9_data[2];
+    if (obj.yaw_mt9>0 && obj.no_of_times_from_begining_for_mt9==5)
     {
-         theta_relative=yaw_mt9;
+         obj.theta_relative=obj.yaw_mt9;
     }
-    yaw_mt9=yaw_mt9-theta_relative+180;
-    if(no_of_times_from_begining_for_mt9<20)
-          no_of_times_from_begining_for_mt9++;
-    if (yaw_mt9<0)
+    obj.yaw_mt9=obj.yaw_mt9-obj.theta_relative+180;
+    if(obj.no_of_times_from_begining_for_mt9<20)
+          obj.no_of_times_from_begining_for_mt9++;
+    if (obj.yaw_mt9<0)
     {
-         yaw_mt9+=360;
+         obj.yaw_mt9+=360;
     }
-    if (yaw_mt9>360)
+    if (obj.yaw_mt9>360)
     {
-         yaw_mt9-=360;
+         obj.yaw_mt9-=360;
     }
-    ROS_INFO("Roll [%f]      ",roll_mt9);
-    ROS_INFO("Pitch [%f]     ",pitch_mt9);
-    ROS_INFO("Yaw [%f]       ",yaw_mt9);
+    ROS_INFO("Roll [%f]      ",obj.roll_mt9);
+    ROS_INFO("Pitch [%f]     ",obj.pitch_mt9);
+    ROS_INFO("Yaw [%f]       ",obj.yaw_mt9);
 }
 void controller::yawController( float steady_angle,float KP_YAW,float KI_YAW,float KD_YAW )
 {
     if(no_of_times_from_begining_for_mt9<=5)
         steady_angle=yaw_mt9;
+
+
     if(steady_angle>360)
         steady_angle-=360;
     if(steady_angle<0)
         steady_angle+=360;
+
     error_yaw=steady_angle-yaw_mt9;
     sum_yaw+=error_yaw;
     diff_yaw=error_yaw-prev_error_yaw;
@@ -119,8 +145,7 @@ int main(int argc, char **argv)
    * You must call one of the versions of ros::init() before using any other
    * part of the ROS system.
    */
-  controller obj;
-    ros::init(argc, argv, "controller");
+  ros::init(argc, argv, "controller");
 
 
   /**
@@ -145,8 +170,8 @@ int main(int argc, char **argv)
    * is the number of messages that will be buffered up before beginning to throw
    * away the oldest ones.
    */
-  ros::Subscriber depth = n.subscribe("current_depth", 10, depthCallback);
-  ros::Subscriber mt9 =   n.subscribe("Orientation_data_from_MT9", 100, mt9Callback);
+  ros::Subscriber depth_callback = n.subscribe("current_depth", 10, depthCallback);
+  ros::Subscriber mt9_callback =   n.subscribe("Orientation_data_from_MT9", 100, mt9Callback);
   /**
    * ros::spin() will enter a loop, pumping callbacks.  With this version, all
    * callbacks will be called from within this thread (the main one).  ros::spin()
@@ -157,18 +182,18 @@ int main(int argc, char **argv)
   if(th.startThrusters())
       cout<<"The serial port is not connected\n";
   /////////starting depth/////////////////
-  vertical_speed=4.0;
-  th.sendCommand(vertical_speed,DepthRightThruster);
-  th.sendCommand(vertical_speed,DepthLeftThruster);
+  obj.vertical_speed=4.0;
+  th.sendCommand(obj.vertical_speed,DepthRightThruster);
+  th.sendCommand(obj.vertical_speed,DepthLeftThruster);
   sleep(1);
-  vertical_speed=0;
+  obj.vertical_speed=0;
   /////////////////////
 
   while(ros::ok())
   {
       ros::spinOnce();
 
-      obj.yawController(steady_angle,KP_YAW,KD_YAW,KI_YAW);
+      obj.yawController(obj.steady_angle,obj.KP_YAW,obj.KD_YAW,obj.KI_YAW);
       obj.depthController();
 
 
