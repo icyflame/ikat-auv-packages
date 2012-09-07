@@ -2,7 +2,7 @@
 #include "std_msgs/String.h"
 #include <ikat_sensor_data/depth_sensor_data.h>
 #include <ikat_sensor_data/mt9_sensor_data.h>
-#include <ikat_controller/Technadyne.h>
+#include <ikat_sensor_data/control_data.h>
 #include <ikat_thrusters/Thrusters.hpp>
 
 #define CH0 0x00
@@ -48,6 +48,7 @@ class controller
 
     //////////////////////////////////////////////////////
     int is_image;
+    float x_coordinate_of_image,y_coordinate_of_image,KP_IMAGE,KI_IMAGE,KD_IMAGE;
 
     //////////////////////////////////////////////////////
     /////member functions
@@ -81,7 +82,7 @@ controller::controller()
     theta_relative=0;
     no_of_times_from_begining_for_mt9=0;
     ////////////////////////////////////////////////////
-    is_image=0;
+    is_image=0,x_coordinate_of_image=0,y_coordinate_of_image=0,KP_IMAGE=0,KI_IMAGE,KD_IMAGE=0;
     ////////////////////////////////////////////////////
     ///thrusters variables
     ////////////////////////////////////////////////////
@@ -127,12 +128,16 @@ void mt9Callback(const ikat_sensor_data::mt9_sensor_data::ConstPtr& msg)
     ROS_INFO("Pitch [%f]     ",obj.pitch_mt9);
     ROS_INFO("Yaw [%f]       ",obj.yaw_mt9);
 }
-void controllSignalCallback(const ikat_sensor_data::mt9_sensor_data::ConstPtr& msg)
+void controllSignalCallback(const ikat_sensor_data::control_data::ConstPtr& msg)
 {
-    obj.steady_angle=msg->;
-    obj.steady_depth=msg->;
-    obj.is_image=msg->header;
-
+    obj.steady_angle=msg->angle;
+    obj.steady_depth=msg->depth;
+    obj.is_image=msg->use_image;
+    obj.x_coordinate_of_image=msg->X;
+    obj.y_coordinate_of_image=msg->Y;
+    obj.KP_IMAGE=msg->Kp;
+    obj.KI_IMAGE=msg->Ki;
+    obj.KD_IMAGE=msg->Kd;
 }
 
 void controller::yawController()
@@ -279,9 +284,16 @@ int main(int argc, char **argv)
   while(ros::ok())
   {
       ros::spinOnce();
-
-      obj.yawController();
-      obj.depthController();
+      if(!is_image)
+      {
+        obj.yawController();
+        obj.depthController();
+      }
+      else
+      {
+          obj.yawController(obj.x_coordinate_of_image,obj.y_coordinate_of_image,obj.KP_IMAGE,obj.KI_IMAGE,obj.KD_IMAGE);
+          obj.depthController();
+      }
 
       ///////////////////////////////////////////////
       //////sending information to thrusters
