@@ -3,7 +3,7 @@
 #include <ikat_sensor_data/depth_sensor_data.h>
 #include <ikat_sensor_data/mt9_sensor_data.h>
 #include <ikat_controller/Technadyne.h>
-//#include <ikat_thrusters/Thrusters.hpp>
+#include <ikat_thrusters/Thrusters.hpp>
 
 #define CH0 0x00
 #define CH1 0x01
@@ -17,7 +17,7 @@
 
 // Thrusters definition
 using namespace std;
-//using namespace ikat_hardware;
+using namespace ikat_hardware;
 class controller
 {
  public:
@@ -45,6 +45,9 @@ class controller
     ///thrusters variables
     ////////////////////////////////////////////////////
     float horizontal_speed,vertical_speed,differential_surge_speed,thruster_surge_left,thruster_surge_right;
+
+    //////////////////////////////////////////////////////
+    int is_image;
 
     //////////////////////////////////////////////////////
     /////member functions
@@ -77,7 +80,8 @@ controller::controller()
     KP_YAW=0.14,KI_YAW=0.00,KD_YAW=.1,error_yaw=0,sum_yaw=0,prev_error_yaw=0.0,diff_yaw=0.0;
     theta_relative=0;
     no_of_times_from_begining_for_mt9=0;
-
+    ////////////////////////////////////////////////////
+    is_image=0;
     ////////////////////////////////////////////////////
     ///thrusters variables
     ////////////////////////////////////////////////////
@@ -123,6 +127,14 @@ void mt9Callback(const ikat_sensor_data::mt9_sensor_data::ConstPtr& msg)
     ROS_INFO("Pitch [%f]     ",obj.pitch_mt9);
     ROS_INFO("Yaw [%f]       ",obj.yaw_mt9);
 }
+void controllSignalCallback(const ikat_sensor_data::mt9_sensor_data::ConstPtr& msg)
+{
+    obj.steady_angle=msg->;
+    obj.steady_depth=msg->;
+    obj.is_image=msg->header;
+
+}
+
 void controller::yawController()
 {
     if(no_of_times_from_begining_for_mt9<=5)
@@ -240,21 +252,26 @@ int main(int argc, char **argv)
    * away the oldest ones.
    */
   ros::Subscriber depth_callback = n.subscribe("current_depth", 10, depthCallback);
-  ros::Subscriber mt9_callback =   n.subscribe("Orientation_data_from_MT9", 100, mt9Callback);
+  ros::Subscriber mt9_callback =   n.subscribe("Orientation_data_from_MT9", 10, mt9Callback);
+  ros::Subscriber task_planner_callback=n.subscribe("control_signal",10,controlSignalCallback);
   /**
    * ros::spin() will enter a loop, pumping callbacks.  With this version, all
    * callbacks will be called from within this thread (the main one).  ros::spin()
    * will exit when Ctrl-C is pressed, or the node is shutdown by the master.
    */
   ros::Rate loopRate(1);
-  thruster th("/dev/ttylUSB0",9600);
-  if(th.startThrusters())
-      cout<<"The serial port is not connected\n";
+  std::string port_name = "/dev/ttylUSB0";
+  ikat_hardware::Thruster th(port_name,9600);
+  //thruster th("/dev/ttylUSB0",9600);
+  //if(th.startThrusters())
+  //   cout<<"The serial port is not connected\n";
 
   /////////starting depth/////////////////
+  if(!th.connectThrusters())
+      cout<<"thrusters not connected\n"<<endl;
   obj.vertical_speed=4.0;
-  th.sendCommand(obj.vertical_speed,DepthRightThruster);
-  th.sendCommand(obj.vertical_speed,DepthLeftThruster);
+  th.sendData(obj.vertical_speed,DepthRightThruster);
+  th.sendData(obj.vertical_speed,DepthLeftThruster);
   sleep(1);
   obj.vertical_speed=0;
   ///////////////////////////////////////
@@ -269,10 +286,10 @@ int main(int argc, char **argv)
       ///////////////////////////////////////////////
       //////sending information to thrusters
       ///////////////////////////////////////////////
-      th.sendCommand(obj.thruster_surge_left,SurgeLeftThruster);
-      th.sendCommand(obj.thruster_surge_right,SurgeRightThruster);
-      th.sendCommand(obj.vertical_speed,DepthRightThruster);
-      th.sendCommand(obj.vertical_speed,DepthLeftThruster);
+      th.sendData(obj.thruster_surge_left,SurgeLeftThruster);
+      th.sendData(obj.thruster_surge_right,SurgeRightThruster);
+      th.sendData(obj.vertical_speed,DepthRightThruster);
+      th.sendData(obj.vertical_speed,DepthLeftThruster);
 
       loopRate.sleep();
 
