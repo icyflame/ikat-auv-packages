@@ -48,17 +48,17 @@ class controller
 
     //////////////////////////////////////////////////////
     int is_image;
-    float x_coordinate_of_image,y_coordinate_of_image,KP_IMAGE,KI_IMAGE,KD_IMAGE;
+    float x_coordinate_of_image,y_coordinate_of_image,KP_YAW_IMAGE,KI_YAW_IMAGE,KD_YAW_IMAGE,KP_DEPTH_IMAGE,KI_DEPTH_IMAGE,KD_DEPTH_IMAGE;
 
     //////////////////////////////////////////////////////
     /////member functions
     //////////////////////////////////////////////////////
     controller();
     void yawController();
-    void yawController(float x_coordinate,float y_coordinate,float KP_YAW_IMAGE,float KI_YAW_IMAGE,float KD_YAW_IMAGE);
+    void yawControllerImage();
     void speedCallibration();
     void depthController();
-    void depthController(float x_coordinate,float y_coordinate,float KP_DEPTH_IMAGE,float KI_DEPTH_IMAGE,float KD_DEPTH_IMAGE);
+    void depthControllerImage();
 } obj;
 
 controller::controller()
@@ -82,7 +82,7 @@ controller::controller()
     theta_relative=0;
     no_of_times_from_begining_for_mt9=0;
     ////////////////////////////////////////////////////
-    is_image=0,x_coordinate_of_image=0,y_coordinate_of_image=0,KP_IMAGE=0,KI_IMAGE,KD_IMAGE=0;
+    is_image=0,x_coordinate_of_image=0,y_coordinate_of_image=0,KP_YAW_IMAGE=0,KI_YAW_IMAGE=0,KD_YAW_IMAGE=0,KP_DEPTH_IMAGE=0,KI_DEPTH_IMAGE=0,KD_DEPTH_IMAGE=0;
     ////////////////////////////////////////////////////
     ///thrusters variables
     ////////////////////////////////////////////////////
@@ -135,9 +135,9 @@ void controllSignalCallback(const ikat_sensor_data::control_data::ConstPtr& msg)
     obj.is_image=msg->use_image;
     obj.x_coordinate_of_image=msg->X;
     obj.y_coordinate_of_image=msg->Y;
-    obj.KP_IMAGE=msg->Kp;
-    obj.KI_IMAGE=msg->Ki;
-    obj.KD_IMAGE=msg->Kd;
+    obj.KP_YAW_IMAGE=msg->Kp;
+    obj.KI_YAW_IMAGE=msg->Ki;
+    obj.KD_YAW_IMAGE=msg->Kd;
 }
 
 void controller::yawController()
@@ -161,9 +161,9 @@ void controller::yawController()
     speedCallibration();
 }
 
-void controller::yawController( float x_coordinate,float y_coordinate,float KP_YAW_IMAGE,float KI_YAW_IMAGE,float KD_YAW_IMAGE )
+void controller::yawControllerImage()
 {
-    error_yaw=x_coordinate;
+    error_yaw=x_coordinate_of_image;
     sum_yaw+=error_yaw;
     diff_yaw=error_yaw-prev_error_yaw;
     prev_error_yaw=error_yaw;
@@ -180,9 +180,9 @@ void controller::depthController()
     sum_depth=sum_depth+error_depth;
     vertical_speed=KP_DEPTH*error_depth+KI_DEPTH*sum_depth+3;
 }
-void controller::depthController(float x_coordinate,float y_coordinate,float KP_DEPTH_IMAGE,float KI_DEPTH_IMAGE,float KD_DEPTH_IMAGE)
+void controller::depthControllerImage()
 {
-    error_depth=y_coordinate;
+    error_depth=y_coordinate_of_image;
     sum_depth=sum_depth+error_depth;
     diff_depth=error_depth-prev_error_depth;
     prev_error_depth=error_depth;
@@ -291,8 +291,8 @@ int main(int argc, char **argv)
       }
       else
       {
-          obj.yawController(obj.x_coordinate_of_image,obj.y_coordinate_of_image,obj.KP_IMAGE,obj.KI_IMAGE,obj.KD_IMAGE);
-          obj.depthController();
+          obj.yawControllerImage();
+          obj.depthControllerImage();
       }
 
       ///////////////////////////////////////////////
