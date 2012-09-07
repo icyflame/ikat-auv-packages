@@ -1,0 +1,17 @@
+<package>
+  <description brief="manual_control">
+
+     manual_control
+
+  </description>
+  <author>Vinay Yadav</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/manual_control</url>
+  <depend package="roscpp"/>
+  <depend package="ikat_sensor_data"/>
+  <depend package="std_msgs"/>
+
+</package>
+
+
