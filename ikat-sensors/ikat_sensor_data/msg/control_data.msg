@@ -4,3 +4,6 @@ float32 depth
 float32 angle
 float32 X
 float32 Y
+float32 Kp
+float32 Ki
+float32 Kd
