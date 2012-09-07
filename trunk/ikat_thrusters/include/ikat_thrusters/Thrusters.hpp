@@ -25,7 +25,7 @@ namespace ikat_hardware
       Thruster(std::string &port_name,int baud_rate);
       bool connectThrusters();
       bool disconnectThrusters();
-      bool sendData(int thruster_no, float voltage);
+      bool sendData( float voltage,int thruster_no);
       bool haultAllThruster();
       virtual ~Thruster();
   };
