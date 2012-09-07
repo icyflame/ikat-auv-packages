@@ -258,7 +258,7 @@ int main(int argc, char **argv)
    */
   ros::Subscriber depth_callback = n.subscribe("current_depth", 10, depthCallback);
   ros::Subscriber mt9_callback =   n.subscribe("Orientation_data_from_MT9", 10, mt9Callback);
-  ros::Subscriber task_planner_callback=n.subscribe("control_signal",10,controlSignalCallback);
+  ros::Subscriber task_planner_callback=n.subscribe("control_signal",10, controllSignalCallback);
   /**
    * ros::spin() will enter a loop, pumping callbacks.  With this version, all
    * callbacks will be called from within this thread (the main one).  ros::spin()
@@ -284,7 +284,7 @@ int main(int argc, char **argv)
   while(ros::ok())
   {
       ros::spinOnce();
-      if(!is_image)
+      if(!obj.is_image)
       {
         obj.yawController();
         obj.depthController();
