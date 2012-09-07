@@ -12,7 +12,6 @@
   <depend package="serialport"/>
   <depend package="ikat_sensor_data"/>
   <depend package="ikat_thrusters"/>
-
 </package>
 
 
