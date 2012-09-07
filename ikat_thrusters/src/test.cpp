@@ -15,9 +15,9 @@ int main(int argc, char** argv)
   if(auv_thrusters.connectThrusters())
   {
       ROS_DEBUG_STREAM("thruster are online to use");
-      auv_thrusters.sendData(0,2.5);
-      auv_thrusters.sendData(1,2.5);
-      auv_thrusters.sendData(2,2.5);
+      auv_thrusters.sendData(2.5,0);
+      auv_thrusters.sendData(2.5,0);
+      auv_thrusters.sendData(2.5,0);
       sleep(2);
       auv_thrusters.haultAllThruster();
   }

@@ -19,13 +19,13 @@ namespace ikat_hardware
   {
       return serial_port.closePort();
   }
-  bool Thruster::sendData(int thruster_no, float voltage)
+  bool Thruster::sendData( float voltage,int thruster_no)
   {
       setData(thruster_no,voltage);
       return serial_port.writeData(thruster_data);
   }
   
-  void Thruster::setData(int thruster_no, float voltage)
+  void Thruster::setData( int thruster_no,float voltage)
   {
       memset(thruster_data,0,sizeof(thruster_data));
       if(voltage>5.0)
