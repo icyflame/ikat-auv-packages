@@ -10,6 +10,7 @@
   <url>http://ros.org/wiki/blob</url>
   <depend package="roscpp"/>
   <depend package="std_msgs"/>
+  <depend package="opencv2"/>
 <export>
   <cpp cflags="-I${prefix}/include/" lflags="-Wl,-rpath,${prefix}/lib -L${prefix}/lib -lblob -lblobcontour -lbloboperators -lblobprop -lblobresult -lcomponent" />
 </export>
