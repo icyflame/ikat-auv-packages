@@ -2,8 +2,8 @@
 #define _CLASSE_BLOBRESULT_INCLUDED
 
 #include "vector"
-#include "BlobContour.h"
-#include "blob.h"
+#include <blob/BlobContour.h>
+#include <blob/blob.h>
 
 
 //! definició de que es un vector de blobs

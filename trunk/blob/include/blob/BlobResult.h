@@ -19,7 +19,7 @@ MODIFICATIONS (Modification, Author, Date):
 #pragma once
 #endif // _MSC_VER > 1000
 
-#include "BlobLibraryConfiguration.h"
+#include <blob/BlobLibraryConfiguration.h>
 #include <math.h>
 #include <opencv/cxcore.h>
 
@@ -34,9 +34,9 @@ MODIFICATIONS (Modification, Author, Date):
 
 #include <vector>		// vectors de la STL
 #include <functional>
-#include "blob.h"
-#include "BlobOperators.h"
-#include "ComponentLabeling.h"
+#include <blob/blob.h>
+#include <blob/BlobOperators.h>
+#include <blob/ComponentLabeling.h>
 /**************************************************************************
 	Filtres / Filters
 **************************************************************************/
