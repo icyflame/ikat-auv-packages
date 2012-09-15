@@ -12,7 +12,7 @@
   <depend package="std_msgs"/>
   <depend package="opencv2"/>
 <export>
-  <cpp cflags="-I${prefix}/include/" lflags="-Wl,-rpath,${prefix}/lib -L${prefix}/lib -lblob -lblobcontour -lbloboperators -lblobprop -lblobresult -lcomponent" />
+  <cpp cflags="-I${prefix}/include/" lflags="-Wl,-rpath,${prefix}/lib -L${prefix}/lib -lblob" />
 </export>
 
 </package>

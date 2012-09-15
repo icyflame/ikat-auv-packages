@@ -1,0 +1,22 @@
+<package>
+  <description brief="iptask">
+
+     iptask
+
+  </description>
+  <author>madhukar</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/iptask</url>
+  <export>
+  <cpp cflags="-I${prefix}/include/" lflags="-Wl,-rpath,${prefix}/lib -L${prefix}/lib -liptask" />
+</export>
+  <depend package="roscpp"/>
+  <depend package="std_msgs"/>
+  
+  <depend package="opencv2"/>
+  <depend package="blob"/>
+
+</package>
+
+
