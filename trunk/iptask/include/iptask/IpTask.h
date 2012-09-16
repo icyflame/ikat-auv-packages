@@ -19,6 +19,7 @@ typedef struct
 
 class iptask
 {
+private:
     CvCapture *img ;
     marker_data data;
     CBlobResult blob;
@@ -29,5 +30,6 @@ public:
     int task_manager(int);
     void markerDetect(void);
     void showimage(void);
+    void threshold(CvScalar,CvScalar);
     ~iptask();
 };
