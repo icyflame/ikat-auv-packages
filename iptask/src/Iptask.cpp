@@ -22,6 +22,25 @@ void iptask::showimage()
     cvReleaseImage(&frame);
 }
 
+void iptask::threshold(CvScalar range1,CvScalar range2)
+{
+    IplImage * frame=cvQueryFrame(img);
+    IplImage * threshold;
+    threshold = cvCreateImage(cvGetSize(frame),frame->depth,1);
+    while(1)
+    {
+        frame=cvQueryFrame(img);
+        cvCvtColor(frame,frame,CV_BGR2HSV_FULL);
+        cvInRangeS(frame,range1,range2,threshold);
+        cvShowImage("Thresholded",threshold);
+        char c=cvWaitKey(33);
+        if(c==27) break;
+
+    }
+    cvReleaseImage(&frame);
+    cvReleaseImage(&threshold);
+}
+
 void iptask::markerDetect(void)
 {
     cvNamedWindow( "wallpaper",CV_WINDOW_AUTOSIZE );
@@ -30,11 +49,11 @@ void iptask::markerDetect(void)
     marker_data data;
     IplImage * frame=cvQueryFrame(img);
     IplImage *imgBW,*imgHSV,*imgH,*imgS,*imgV;
-    //CBlobResult blobs;
-    //CBlob* currentBlob;
-    //CvSeq* contours;
-    //CvSeq* result;
-    //CvBox2D box;
+    CBlobResult blobs;
+    CBlob* currentBlob;
+    CvSeq* contours;
+    CvSeq* result;
+    CvBox2D box;
     CvPoint2D32f * p = (CvPoint2D32f *)malloc(4*sizeof(CvPoint2D32f));
     CvMemStorage* storage = cvCreateMemStorage(0);
     CvPoint *p1,*p2,*p3,*p4;
@@ -52,16 +71,15 @@ void iptask::markerDetect(void)
             if (!frame)
                 break;
             maxArea=0,a1=0,l1=0,l2=0,data.angle=0,c=NULL,data.x_cor=0.0,data.y_cor=0.0;
-            //result=NULL,currentBlob=NULL,p1=NULL,p2=NULL,p3=NULL,p4=NULL;
+            result=NULL,currentBlob=NULL,p1=NULL,p2=NULL,p3=NULL,p4=NULL;
             cvCvtColor(frame,imgHSV,CV_BGR2HSV_FULL);
             cvShowImage("original",imgHSV);
-            cvInRangeS(imgHSV, cvScalar(5,0,0), cvScalar(25, 255, 255), imgBW);
+            cvInRangeS(imgHSV, cvScalar(5,0,0), cvScalar(50, 255, 255), imgBW);
             cvShowImage("wallpaper",imgBW);
             cvSmooth( imgBW, imgBW, CV_GAUSSIAN, 11, 11 );
             cvDilate(imgBW,imgBW);
             cvErode(imgBW,imgBW);
             blob = CBlobResult( imgBW, NULL,0);
-            /*
             blobs.Filter( blobs, B_EXCLUDE, CBlobGetArea(), B_LESS,100 );
             for (int i = 0; i < blobs.GetNumBlobs(); i++ )
             {
@@ -71,7 +89,7 @@ void iptask::markerDetect(void)
             cvShowImage("wall1",imgBW);
             cvCanny( imgBW, imgBW, 10, 100, 3 );
             cvFindContours( imgBW, storage,&contours, sizeof(CvContour),CV_RETR_LIST, CV_CHAIN_APPROX_SIMPLE);
-            while(contours)
+            /*while(contours)
             {
                     result = cvApproxPoly( contours, sizeof(CvContour), storage,CV_POLY_APPROX_DP, cvContourPerimeter(contours)*0.02, 0 );
                     if( fabs(cvContourPerimeter(result))>500)
