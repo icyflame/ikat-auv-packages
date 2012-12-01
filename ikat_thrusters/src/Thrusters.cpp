@@ -51,6 +51,7 @@ namespace ikat_hardware
   bool Thruster::haultAllThruster()
   {
       return (sendData(0,0.0)&&sendData(1,0.0)&&sendData(2,0.0));
+      sleep(1);
   }
   
   Thruster::~Thruster()

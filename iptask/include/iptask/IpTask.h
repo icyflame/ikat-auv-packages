@@ -1,4 +1,5 @@
 #include <ros/ros.h>
+#include <std_msgs/String.h>
 #include <opencv/cv.h>
 #include <opencv/highgui.h>
 #include <opencv/cxcore.h>
@@ -13,23 +14,20 @@
 
 typedef struct
 {
+    CvPoint2D32f size,center;
     float angle;
-    int x_cor,y_cor;
 }marker_data;
 
 class iptask
 {
 private:
-    CvCapture *img ;
-    marker_data data;
-    CBlobResult blob;
-    CBlob* currentBlob;
-
+    CvCapture *img;
 public:
     iptask(int);
     int task_manager(int);
     void markerDetect(void);
     void showimage(void);
     void threshold(CvScalar,CvScalar);
+    void validationGate(void);
     ~iptask();
 };
