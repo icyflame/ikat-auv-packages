@@ -20,7 +20,7 @@ using namespace std;
 using namespace ikat_hardware;
 class controller
 {
- public:
+public:
     /////////////////////////////////////////////////////
     ///Depth Sensor Variables
     /////////////////////////////////////////////////////
@@ -54,10 +54,10 @@ class controller
     /////member functions
     //////////////////////////////////////////////////////
     controller();
-    void yawController();
+    void yawController(float);
     void yawControllerImage();
     void speedCallibration();
-    void depthController();
+    void depthController(float);
     void depthControllerImage();
 } obj;
 
@@ -140,7 +140,7 @@ void controllSignalCallback(const ikat_sensor_data::control_data::ConstPtr& msg)
     obj.KD_YAW_IMAGE=msg->Kd;
 }
 
-void controller::yawController()
+void controller::yawController(float setangle)
 {
     if(no_of_times_from_begining_for_mt9<=5)
         steady_angle=yaw_mt9;
@@ -150,7 +150,7 @@ void controller::yawController()
         steady_angle-=360;
     if(steady_angle<0)
         steady_angle+=360;
-
+    steady_angle=setangle;
     error_yaw=steady_angle-yaw_mt9;
     sum_yaw+=error_yaw;
     diff_yaw=error_yaw-prev_error_yaw;
@@ -158,7 +158,8 @@ void controller::yawController()
     differential_surge_speed=KP_YAW*error_yaw+KI_YAW*sum_yaw+KD_YAW*diff_yaw;
     thruster_surge_left=-differential_surge_speed+horizontal_speed;
     thruster_surge_right= differential_surge_speed+horizontal_speed;
-    speedCallibration();
+    //speedCallibration();
+    cout<<error_yaw<<endl;
 }
 
 void controller::yawControllerImage()
@@ -174,11 +175,13 @@ void controller::yawControllerImage()
     speedCallibration();
 }
 
-void controller::depthController()
+void controller::depthController(float setdepth)
 {
+    steady_depth=setdepth;
     error_depth=-depth+steady_depth;
     sum_depth=sum_depth+error_depth;
     vertical_speed=KP_DEPTH*error_depth+KI_DEPTH*sum_depth+3;
+    cout<<error_depth<<endl;
 }
 void controller::depthControllerImage()
 {
@@ -256,29 +259,48 @@ int main(int argc, char **argv)
    * is the number of messages that will be buffered up before beginning to throw
    * away the oldest ones.
    */
-  ros::Subscriber depth_callback = n.subscribe("current_depth", 10, depthCallback);
-  ros::Subscriber mt9_callback =   n.subscribe("Orientation_data_from_MT9", 10, mt9Callback);
-  ros::Subscriber task_planner_callback=n.subscribe("control_signal",10, controllSignalCallback);
+  //ros::Subscriber depth_callback = n.subscribe("current_depth", 10, depthCallback);
+  //ros::Subscriber mt9_callback =   n.subscribe("Orientation_data_from_MT9", 10, mt9Callback);
+  //ros::Subscriber task_planner_callback=n.subscribe("control_signal",10, controllSignalCallback);
   /**
    * ros::spin() will enter a loop, pumping callbacks.  With this version, all
    * callbacks will be called from within this thread (the main one).  ros::spin()
    * will exit when Ctrl-C is pressed, or the node is shutdown by the master.
    */
   ros::Rate loopRate(1);
-  std::string port_name = "/dev/ttylUSB0";
+  std::string port_name = "/dev/ttyACM0";
   ikat_hardware::Thruster th(port_name,9600);
-  //thruster th("/dev/ttylUSB0",9600);
-  //if(th.startThrusters())
-  //   cout<<"The serial port is not connected\n";
-
+  //Thruster th("/dev/ttyACM0",9600);
+  if(th.connectThrusters())
+     cout<<"The serial port is not connected\n";
+  th.sendData(2.5,SurgeLeftThruster);
+    sleep(1);
+    th.sendData(0,SurgeLeftThruster);
+    sleep(1);
+    //th.haultAllThruster();
+    th.sendData(2.5,SurgeRightThruster);
+    sleep(1);
+    //th.haultAllThruster();
+    th.sendData(0,SurgeRightThruster);
+    sleep(1);
+    th.sendData(2.5,DepthRightThruster);
+    sleep(1);
+    //th.haultAllThruster();
+    th.sendData(0,DepthRightThruster);
+    sleep(1);
+    th.sendData(2.5,DepthLeftThruster);
+    sleep(1);
+    //th.haultAllThruster();
+    th.sendData(0,DepthLeftThruster);
+    sleep(1);
   /////////starting depth/////////////////
-  if(!th.connectThrusters())
+  /*if(!th.connectThrusters())
       cout<<"thrusters not connected\n"<<endl;
   obj.vertical_speed=4.0;
   th.sendData(obj.vertical_speed,DepthRightThruster);
   th.sendData(obj.vertical_speed,DepthLeftThruster);
   sleep(1);
-  obj.vertical_speed=0;
+  obj.vertical_speed=0;*/
   ///////////////////////////////////////
 
   while(ros::ok())
@@ -286,8 +308,8 @@ int main(int argc, char **argv)
       ros::spinOnce();
       if(!obj.is_image)
       {
-        obj.yawController();
-        obj.depthController();
+        //obj.yawController(30);
+        obj.depthController(.7);
       }
       else
       {
@@ -298,10 +320,10 @@ int main(int argc, char **argv)
       ///////////////////////////////////////////////
       //////sending information to thrusters
       ///////////////////////////////////////////////
-      th.sendData(obj.thruster_surge_left,SurgeLeftThruster);
-      th.sendData(obj.thruster_surge_right,SurgeRightThruster);
-      th.sendData(obj.vertical_speed,DepthRightThruster);
-      th.sendData(obj.vertical_speed,DepthLeftThruster);
+      //th.sendData(obj.thruster_surge_left,SurgeLeftThruster);
+      //th.sendData(obj.thruster_surge_right,SurgeRightThruster);
+      //th.sendData(obj.vertical_speed,DepthRightThruster);
+      //th.sendData(obj.vertical_speed,DepthLeftThruster);
 
       loopRate.sleep();
 

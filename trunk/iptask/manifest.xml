@@ -16,6 +16,7 @@
   
   <depend package="opencv2"/>
   <depend package="blob"/>
+  <depend package="ikat_ip_data"/>
 
 </package>
 

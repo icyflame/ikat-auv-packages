@@ -89,6 +89,7 @@ bool DepthSensor::recieveData(std::string &data)
     int datano =0;
     do
     {
+        //std::cout<<"in\n";
         datano++;
         buff='1';
        if(!serial_port.readChar(buff))
@@ -97,9 +98,9 @@ bool DepthSensor::recieveData(std::string &data)
            ROS_ERROR_STREAM("character not read properly hence aborting reading");
            return false;
        }
-       std::cout<<buff;
+       //std::cout<<buff;
        data+=buff;
-    }while(buff!='\n');
+    }while(buff!='\r');
     //std::cout<<"recieved bytes "<<datano<<std::endl;
     return true;
 }

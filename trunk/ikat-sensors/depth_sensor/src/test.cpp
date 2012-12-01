@@ -14,7 +14,7 @@ int main(int argc, char** argv)
   my_logger->setLevel(ros::console::g_level_lookup[ros::console::levels::Debug]);
 #endif
 
-  ikat_sensor::DepthSensor depth_sensor("/dev/ttyUSB0");
+  ikat_sensor::DepthSensor depth_sensor("/dev/ttyACM0");
   depth_sensor.startTransmission();
 
   ros::NodeHandle n;
