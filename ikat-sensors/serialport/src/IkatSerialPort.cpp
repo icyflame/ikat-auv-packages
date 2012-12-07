@@ -197,15 +197,17 @@ namespace ikat_sensor
   bool IkatSerialPort::configPort()
   {
       struct termios port_setting;
+      tcgetattr(file_descriptor, &port_setting);
       cfsetispeed(&port_setting,baudrate);
       cfsetospeed(&port_setting,baudrate);
-
+      port_setting.c_cflag |= (CLOCAL | CREAD);
       port_setting.c_cflag &= ~PARENB;
       port_setting.c_cflag &= ~CSTOPB;
       port_setting.c_cflag &= ~CSIZE;
       port_setting.c_cflag |= CS8;
       port_setting.c_cflag |= port_flags;
-
+      port_setting.c_iflag &= ~(IXON | IXOFF | IXANY);
+      port_setting.c_cflag &= ~CRTSCTS;
       tcsetattr(file_descriptor,TCSANOW, &port_setting);
       return true;
   }

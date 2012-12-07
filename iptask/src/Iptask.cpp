@@ -7,7 +7,8 @@ using namespace std;
 
 iptask::iptask(int camerainput)
 {
-    img = cvCaptureFromCAM(camerainput);
+    img = cvCaptureFromFile("/home/madhukar/ros_workspace/ikat-auv-packages/iptask/src/forward-wire-11_13_58.avi");
+    bottomcam = cvCaptureFromCAM(1);
 }
 
 void iptask::showimage()
@@ -87,6 +88,8 @@ void iptask::markerDetect(void)
          }
          cvCanny(img_proc,img_proc,10,200);
          total_con=cvFindContours(img_proc,storage,&contours,sizeof(CvContour),CV_RETR_LIST, CV_CHAIN_APPROX_SIMPLE);
+         if(contours->total==0)
+             continue;
          final_contour=cvApproxPoly(contours,sizeof(CvContour),storage,CV_POLY_APPROX_DP,1,1);
          maxarea=0;
          cvZero(img_con);
@@ -125,6 +128,8 @@ void iptask::markerDetect(void)
          ++count;
          looprate.sleep();
      }
+     cvDestroyWindow("Image Actual");
+     cvDestroyWindow("final Image");
      free(Data);
 }
 
@@ -158,6 +163,11 @@ void iptask::validationGate()
             cvInRangeS(img_hsv,cvScalar(60,50,0),cvScalar(95,255,255),final);
             cvSmooth(final,final,CV_MEDIAN,7,7);
             contours = cvHoughLines2(final, storage, CV_HOUGH_PROBABILISTIC, 1, CV_PI/180,120, 10);
+            char c=cvWaitKey(33);
+            if(c==27)
+                    break;
+            if(contours->total==0)
+                continue;
             for( int i = 0; i < contours->total; i++ )
             {
                     CvPoint* line = (CvPoint*)cvGetSeqElem(contours,i);
@@ -221,9 +231,6 @@ void iptask::validationGate()
             error.errory=center.y-rodB.y;
             validation_gate.publish(error);
             cvShowImage("Final",img_RGB);
-            char c=cvWaitKey(33);
-            if(c==27)
-                    break;
             count++;
             looprate.sleep();
 

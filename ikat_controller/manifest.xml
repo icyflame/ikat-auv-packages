@@ -12,6 +12,11 @@
   <depend package="serialport"/>
   <depend package="ikat_sensor_data"/>
   <depend package="ikat_thrusters"/>
+  <export>
+  <cpp cflags="-I${prefix}/include/" lflags="-Wl,-rpath,${prefix}/lib -L${prefix}/lib -lDepthController" />
+  <cpp cflags="-I${prefix}/include/" lflags="-Wl,-rpath,${prefix}/lib -L${prefix}/lib -lYawController" />
+  </export>
+
 </package>
 
 

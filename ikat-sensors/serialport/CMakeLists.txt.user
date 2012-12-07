@@ -19,7 +19,7 @@
    <value key="EditorConfiguration.SmartBackspace" type="bool">false</value>
    <value key="EditorConfiguration.SpacesForTabs" type="bool">true</value>
    <value key="EditorConfiguration.TabKeyBehavior" type="int">0</value>
-   <value key="EditorConfiguration.TabSize" type="int">4</value>
+   <value key="EditorConfiguration.TabSize" type="int">8</value>
    <value key="EditorConfiguration.UseGlobal" type="bool">true</value>
    <value key="EditorConfiguration.Utf8BomBehavior" type="int">1</value>
    <value key="EditorConfiguration.addFinalNewLine" type="bool">true</value>
@@ -38,7 +38,7 @@
    <value key="ProjectExplorer.Target.ActiveDeployConfiguration" type="int">0</value>
    <value key="ProjectExplorer.Target.ActiveRunConfiguration" type="int">0</value>
    <valuemap key="ProjectExplorer.Target.BuildConfiguration.0" type="QVariantMap">
-    <value key="CMakeProjectManager.CMakeBuildConfiguration.BuildDirectory" type="QString">/home/vinay/ros_workspace/vinay-ros-packages/serialport/build</value>
+    <value key="CMakeProjectManager.CMakeBuildConfiguration.BuildDirectory" type="QString">/home/madhukar/ros_workspace/ikat-auv-packages/ikat-sensors/serialport/build</value>
     <value key="CMakeProjectManager.CMakeBuildConfiguration.ToolChain" type="QString">ProjectExplorer.ToolChain.Gcc:/usr/bin/g++.x86-linux-generic-elf-32bit.</value>
     <value key="ProjectExplorer.BuildCOnfiguration.ToolChain" type="QString">ProjectExplorer.ToolChain.Gcc:/usr/bin/g++.x86-linux-generic-elf-32bit.</value>
     <valuemap key="ProjectExplorer.BuildConfiguration.BuildStepList.0" type="QVariantMap">
@@ -136,7 +136,7 @@
  </data>
  <data>
   <variable>ProjectExplorer.Project.Updater.EnvironmentId</variable>
-  <value type="QString">{046fe8ce-bac8-4a27-8d28-7e514947c7cd}</value>
+  <value type="QString">{5f0959ce-6ce0-4848-8486-2015cc758a51}</value>
  </data>
  <data>
   <variable>ProjectExplorer.Project.Updater.FileVersion</variable>

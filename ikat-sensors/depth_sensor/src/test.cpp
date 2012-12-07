@@ -14,7 +14,7 @@ int main(int argc, char** argv)
   my_logger->setLevel(ros::console::g_level_lookup[ros::console::levels::Debug]);
 #endif
 
-  ikat_sensor::DepthSensor depth_sensor("/dev/ttyACM0");
+  ikat_sensor::DepthSensor depth_sensor("/dev/ttyUSB0");
   depth_sensor.startTransmission();
 
   ros::NodeHandle n;
@@ -35,3 +35,14 @@ int main(int argc, char** argv)
   depth_sensor.~DepthSensor();
   return 0;
 }
+port_setting.c_cflag |= (CLOCAL | CREAD);
+      port_setting.c_cflag &= ~PARENB;
+      port_setting.c_cflag &= ~CSTOPB;
+      port_setting.c_cflag &= ~CSIZE;
+      port_setting.c_cflag |= CS8;
+      port_setting.c_cflag |= port_flags;
+      port_setting.c_iflag |= (IXON | IXOFF | IXANY);
+      port_setting.c_iflag |= (INLCR);
+      port_setting.c_cflag &= ~CRTSCTS;
+      port_setting.c_lflag &= ~(ICANON | ECHO | ECHOE | ISIG);
+      tcsetattr(file_descriptor,TCSANOW, &port_setting);
