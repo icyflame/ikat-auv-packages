@@ -87,6 +87,7 @@ bool DepthSensor::recieveData(std::string &data)
     data.clear();
     char buff;
     int datano =0;
+    //char *check;
     do
     {
         //std::cout<<"in\n";
@@ -98,10 +99,8 @@ bool DepthSensor::recieveData(std::string &data)
            ROS_ERROR_STREAM("character not read properly hence aborting reading");
            return false;
        }
-       //std::cout<<buff;
        data+=buff;
     }while(buff!='\r');
-    //std::cout<<"recieved bytes "<<datano<<std::endl;
     return true;
 }
 

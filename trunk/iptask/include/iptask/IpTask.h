@@ -22,6 +22,7 @@ class iptask
 {
 private:
     CvCapture *img;
+    CvCapture *bottomcam;
 public:
     iptask(int);
     int task_manager(int);
