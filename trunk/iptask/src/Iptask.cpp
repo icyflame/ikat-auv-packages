@@ -25,11 +25,14 @@ void iptask::showimage()
         if(c==27) break;
     }
     cvDestroyWindow("My image");
+    //cvReleaseImage(&frame);
 }
 
 void iptask::threshold(CvScalar range1,CvScalar range2)
 {
-    IplImage * frame=cvQueryFrame(img);
+    IplImage * frame;
+    //if(img->)
+    frame =cvQueryFrame(img);
     IplImage * threshold;
     threshold = cvCreateImage(cvGetSize(frame),frame->depth,1);
     while(1)
