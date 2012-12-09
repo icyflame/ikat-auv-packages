@@ -1,0 +1,70 @@
+<?xml version="1.0"?>
+<robot name="kraken">
+  <link name="base_link">
+    <inertial>
+      <origin xyz="0 0 0" /> 
+      <mass value="35" />
+      <inertia  ixx="1" ixy="0.0"  ixz="0.0"  iyy="1"  iyz="0.0"  izz="1" />
+    </inertial>
+    <visual>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <mesh filename="package://UWSim/data/robot/KRAKEN/new_model_kraken.3ds"/>
+      </geometry>
+    </visual>
+    <collision>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <mesh filename="package://UWSim/data/robot/KRAKEN/new_model_kraken.3ds"/>
+      </geometry>
+    </collision>
+  </link>
+  <link name="right_heave_thruster">
+  </link>
+  <link name="left_heave_thruster">
+  </link>
+  <link name="right_surge_thruster">
+  </link>
+  <link name="left_surge_thruster">
+  </link>
+  <link name="camera_front">
+  </link>
+  <link name="camera_bottom">
+  </link>
+  <joint name="camera_front_to_base_link" type="fixed">
+    <parent link="base_link"/>
+    <child link="camera_front"/>
+    <axis xyz="0 0 1"/>
+    <origin rpy="0 -1.57 0" xyz="0.358 -0.0 0.13"/>
+  </joint>
+  <joint name="camera_bottom_to_base_link" type="fixed">
+    <parent link="base_link"/>
+    <child link="camera_bottom"/>
+    <axis xyz="0 0 1"/>
+    <origin rpy="0 0 0" xyz="0.05 -0.0 -0.03"/>
+  </joint>
+  <joint name="right_heave_thruster_to_base_link" type="fixed">
+    <parent link="base_link"/>
+    <child link="right_heave_thruster"/>
+    <axis xyz="0 0 1"/>
+    <origin rpy="0 0.0 0" xyz="-0.0 -0.17 0.06"/>
+  </joint>
+  <joint name="left_heave_thruster_to_base_link" type="fixed">
+    <parent link="base_link"/>
+    <child link="left_heave_thruster"/>
+    <axis xyz="0 0 1"/>
+    <origin rpy="0 0.0 0" xyz="-0.0 0.17 0.06"/>
+  </joint>
+  <joint name="right_surge_thruster_to_base_link" type="fixed">
+    <parent link="base_link"/>
+    <child link="right_surge_thruster"/>
+    <axis xyz="-1 0 0"/>
+    <origin rpy="0 0.0 0" xyz="-0.452 -0.17 0.00"/>
+  </joint>
+  <joint name="left_surge_thruster_to_base_link" type="fixed">
+    <parent link="base_link"/>
+    <child link="left_surge_thruster"/>
+    <axis xyz="-1 0 0"/>
+    <origin rpy="0 0.0 0" xyz="-0.452 0.17 0.00"/>
+  </joint>
+</robot>
