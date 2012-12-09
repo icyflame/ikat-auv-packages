@@ -1,32 +1,7 @@
 <?xml version="1.0"?>
 <robot name="Kraken">
-  <!--gazebo reference="base">
-    <material>Gazebo/GrassFloor</material>
-  </gazebo-->
-  <!--link name="center_auv">
-   <inertial>
-      <origin xyz="0 0 0" /> 
-      <mass value="0.01" />
-      <inertia  ixx="0.01" ixy="0.0"  ixz="0.0"  iyy="0.01"  iyz="0.0"  izz="0.01" />
-    </inertial>
-    <visual>
-      <origin xyz="0 0 0"/>
-      <geometry>
-        <box size=".01 .01 .01" />
-      </geometry>
-    </visual>
-    <collision>
-      <origin xyz="0 0 0"/>
-      <geometry>
-        <box size=".01 .01 .01" />
-      </geometry>
-    </collision>
-  </link>
-  <!--gazebo reference="auv">
-    <material>Gazebo/Green</material>
-    <turnGravityOff>true</turnGravityOff>
-  </gazebo-->
-  <link name="auv_body">
+<!-- main body of Auv-->
+  <link name="base_link">
     <inertial>
       <origin xyz="0 0 0" /> 
       <mass value="35" />
@@ -45,10 +20,12 @@
       </geometry>
     </collision>
   </link>
-  <gazebo reference="auv_body">
+<!-- Gazebo refernece of main body of Auv-->
+  <gazebo reference="base_link">
     <material>Gazebo/Green</material>
     <turnGravityOff>true</turnGravityOff>
   </gazebo>
+<!-- right heave thruster -->
   <link name="right_heave_thruster">
     <inertial>
       <origin xyz="0 0 0" /> 
@@ -68,6 +45,7 @@
       </geometry>
     </collision>
   </link>
+<!-- Gazebo refernece of right heave thruster of Auv-->
   <gazebo reference="right_heave_thruster">
     <material>Gazebo/Red</material>
     <turnGravityOff>true</turnGravityOff>
@@ -142,7 +120,45 @@
     <turnGravityOff>true</turnGravityOff>
   </gazebo>
   <link name="camera_front">
-  <inertial>
+    <inertial>
+      <origin xyz="0 0 0" /> 
+      <mass value="0.01" />
+      <inertia  ixx="0.01" ixy="0.00"  ixz="0.0"  iyy="0.001"  iyz="0.0"  izz="0.01" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0"/>
+      <geometry>
+        <box size=".01 .01 .01" />
+      </geometry>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0"/>
+      <geometry>
+        <box size=".01 .01 .01" />
+      </geometry>
+    </collision>
+  </link>
+  <link name="camera_bottom">
+    <inertial>
+      <origin xyz="0 0 0" /> 
+      <mass value="0.01" />
+      <inertia  ixx="0.01" ixy="0.00"  ixz="0.0"  iyy="0.001"  iyz="0.0"  izz="0.01" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0"/>
+      <geometry>
+        <box size=".01 .01 .01" />
+      </geometry>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0"/>
+      <geometry>
+        <box size=".01 .01 .01" />
+      </geometry>
+    </collision>
+  </link>
+  <link name="imu">
+    <inertial>
       <origin xyz="0 0 0" /> 
       <mass value="0.01" />
       <inertia  ixx="0.01" ixy="0.00"  ixz="0.0"  iyy="0.001"  iyz="0.0"  izz="0.01" />
@@ -161,77 +177,71 @@
     </collision>
   </link>
   <joint name="camera_front_to_base_link" type="fixed">
-    <parent link="auv_body"/>
+    <parent link="base_link"/>
     <child link="camera_front"/>
     <axis xyz="0 0 1"/>
-    <!--origin rpy="0 0.0 0" xyz="-0.428 -0.17 0.12"/-->
-    <origin rpy="0 0.0 0" xyz="0.428 -0.0 0.06"/>
-    <limit effort="30" lower="0.0" upper=".01" velocity="2.0"/>
+    <origin rpy="0 0 0" xyz="0.358 -0.0 0.13"/>
   </joint>
-  <!--joint name="auv_body_to_center_auv" type="fixed">
-    <parent link="auv_body"/>
-    <child link="center_auv"/>
-    <axis xyz="0 0 0"/>
-    <origin rpy="0 0.0 0" xyz="0 0 0"/>
+  <joint name="camera_bottom_to_base_link" type="fixed">
+    <parent link="base_link"/>
+    <child link="camera_bottom"/>
+    <axis xyz="0 0 1"/>
+    <origin rpy="0 0 0" xyz="0.05 -0.0 -0.03"/>
   </joint>
-  <!--transmission name="j0_transmission" type="pr2_mechanism_model/SimpleTransmission">
-    <actuator name="j0"/>
-    <joint name="auv_body"/>
-    <mechanicalReduction>1</mechanicalReduction>
-    <motorTorqueConstant>1</motorTorqueConstant>
-  </transmission-->
+  <joint name="imu_to_base_link" type="fixed">
+    <parent link="base_link"/>
+    <child link="imu"/>
+    <axis xyz="0 0 1"/>
+    <origin rpy="0 0 0" xyz="0.00 -0.0 -0.00"/>
+  </joint>
   <joint name="right_heave_thruster_to_base_link" type="revolute">
-    <parent link="auv_body"/>
+    <parent link="base_link"/>
     <child link="right_heave_thruster"/>
     <axis xyz="0 0 1"/>
-    <!--origin rpy="0 0.0 0" xyz="-0.428 -0.17 0.12"/-->
-    <origin rpy="0 0.0 0" xyz="-0.0 -0.37 0.06"/>
+    <origin rpy="0 0.0 0" xyz="-0.0 -0.17 0.06"/>
     <limit effort="30" lower="0.0" upper=".01" velocity="2.0"/>
   </joint>
-  <transmission name="j1_transmission" type="pr2_mechanism_model/SimpleTransmission">
-    <actuator name="j1"/>
+  <transmission name="right_heave_thruster_to_base_link_transmission" type="pr2_mechanism_model/SimpleTransmission">
+    <actuator name="right_heave_thruster_to_base_link_motor"/>
     <joint name="right_heave_thruster_to_base_link"/>
     <mechanicalReduction>1</mechanicalReduction>
     <motorTorqueConstant>1</motorTorqueConstant>
   </transmission>
   <joint name="left_heave_thruster_to_base_link" type="revolute">
-    <parent link="auv_body"/>
+    <parent link="base_link"/>
     <child link="left_heave_thruster"/>
     <axis xyz="0 0 1"/>
-    <!--origin rpy="0 0.0 0" xyz="-0.428 0.17 0.12"/-->
-    <origin rpy="0 0.0 0" xyz="-0.0 0.37 0.06"/>
+    <origin rpy="0 0.0 0" xyz="-0.0 0.17 0.06"/>
     <limit effort="30" lower="0.0" upper=".01" velocity="2.0"/>
   </joint>
-  <transmission name="j2_transmission" type="pr2_mechanism_model/SimpleTransmission">
-    <actuator name="j2"/>
+  <transmission name="left_heave_thruster_to_base_link_transmission" type="pr2_mechanism_model/SimpleTransmission">
+    <actuator name="left_heave_thruster_to_base_link_motor"/>
     <joint name="left_heave_thruster_to_base_link"/>
     <mechanicalReduction>1</mechanicalReduction>
     <motorTorqueConstant>1</motorTorqueConstant>
   </transmission>
   <joint name="right_surge_thruster_to_base_link" type="revolute">
-    <parent link="auv_body"/>
+    <parent link="base_link"/>
     <child link="right_surge_thruster"/>
     <axis xyz="-1 0 0"/>
-    <!--origin rpy="0 0.0 0" xyz="-0.88 -0.17 0.06"/-->
-    <origin rpy="0 0.0 0" xyz="-0.452 -0.37 0.00"/>
+    <origin rpy="0 0.0 0" xyz="-0.452 -0.17 0.00"/>
     <limit effort="30" lower="0.0" upper=".01" velocity="2.0"/>
   </joint>
-  <transmission name="j3_transmission" type="pr2_mechanism_model/SimpleTransmission">
-    <actuator name="j3"/>
+  <transmission name="right_surge_thruster_to_base_link_transmission" type="pr2_mechanism_model/SimpleTransmission">
+    <actuator name="right_surge_thruster_to_base_link_motor"/>
     <joint name="right_surge_thruster_to_base_link"/>
     <mechanicalReduction>1</mechanicalReduction>
     <motorTorqueConstant>1</motorTorqueConstant>
   </transmission>
   <joint name="left_surge_thruster_to_base_link" type="revolute">
-    <parent link="auv_body"/>
+    <parent link="base_link"/>
     <child link="left_surge_thruster"/>
     <axis xyz="-1 0 0"/>
-    <origin rpy="0 0.0 0" xyz="-0.452 0.37 0.00"/>
+    <origin rpy="0 0.0 0" xyz="-0.452 0.17 0.00"/>
     <limit effort="30" lower="0.0" upper=".01" velocity="2.0"/>
-    <!--origin rpy="0 0.0 0" xyz="-0.88 0.17 0.06"/-->
   </joint>
-  <transmission name="j4_transmission" type="pr2_mechanism_model/SimpleTransmission">
-    <actuator name="j4"/>
+  <transmission name="left_surge_thruster_to_base_link_transmission" type="pr2_mechanism_model/SimpleTransmission">
+    <actuator name="left_surge_thruster_to_base_link_motor"/>
     <joint name="left_surge_thruster_to_base_link"/>
     <mechanicalReduction>1</mechanicalReduction>
     <motorTorqueConstant>1</motorTorqueConstant>
@@ -284,10 +294,10 @@
         <cameraInfoTopicName>/front_cam/camera_info</cameraInfoTopicName>
         <pollServiceName>/front_cam/request_image</pollServiceName>
         <frameName>camera_front</frameName>
-        <CxPrime>2005</CxPrime>
+        <CxPrime>200.5</CxPrime>
         <Cx>200.5</Cx>
         <Cy>150.5</Cy>
-        <focal_length>2955</focal_length> <!-- image_width / (2*tan(hfov_radian /2)) -->
+        <focal_length>400</focal_length> <!-- image_width / (2*tan(hfov_radian /2)) -->
         <distortion_k1>0.00000000</distortion_k1>
         <distortion_k2>0.00000000</distortion_k2>
         <distortion_k3>0.00000000</distortion_k3>
@@ -296,5 +306,50 @@
         <interface:camera name="front_cam_interface"/>
       </controller:gazebo_ros_depth_camera>
     </sensor:camera>
+  </gazebo>
+  <gazebo reference="camera_bottom">
+    <material>Gazebo/Red</material>
+    <turnGravityOff>true</turnGravityOff>
+    <sensor:camera name="bottom_camera">
+      <imageFormat>R8G8B8</imageFormat>
+      <imageSize>400 300</imageSize>
+      <hfov>45</hfov>
+      <nearClip>0.1</nearClip>
+      <farClip>100</farClip>
+      <updateRate>2.0</updateRate>
+      <controller:gazebo_ros_depth_camera name="bottom_cam" plugin="libgazebo_ros_depth_camera.so">
+        <alwaysOn>true</alwaysOn>
+        <updateRate>2.0</updateRate>
+        <cameraName>cam_bottom</cameraName>
+        <imageTopicName>/bottom_cam/image_raw</imageTopicName>
+        <cameraInfoTopicName>/bottom_cam/camera_info</cameraInfoTopicName>
+        <pollServiceName>/bottom_cam/request_image</pollServiceName>
+        <frameName>camera_bottom</frameName>
+        <CxPrime>200.5</CxPrime>
+        <Cx>200.5</Cx>
+        <Cy>150.5</Cy>
+        <focal_length>400</focal_length> <!-- image_width / (2*tan(hfov_radian /2)) -->
+        <distortion_k1>0.00000000</distortion_k1>
+        <distortion_k2>0.00000000</distortion_k2>
+        <distortion_k3>0.00000000</distortion_k3>
+        <distortion_t1>0.00000000</distortion_t1>
+        <distortion_t2>0.00000000</distortion_t2>
+        <interface:camera name="bottom_cam_interface"/>
+      </controller:gazebo_ros_depth_camera>
+    </sensor:camera>
+  </gazebo>
+  <gazebo>
+    <material>Gazebo/Red</material>
+    <turnGravityOff>true</turnGravityOff>>
+    <controller:gazebo_ros_imu name="imu_controller" plugin="libgazebo_ros_imu.so">
+      <alwaysOn>true</alwaysOn>
+      <updateRate>5.0</updateRate> 
+      <bodyName>imu</bodyName>
+      <topicName>imu_data</topicName>
+      <gaussianNoise>2.89e-08</gaussianNoise>
+      <xyzOffsets>0 0 0</xyzOffsets>
+      <rpyOffsets>0 0 0</rpyOffsets>
+      <interface:position name="imu_position"/>
+    </controller:gazebo_ros_imu>
   </gazebo>
 </robot>
