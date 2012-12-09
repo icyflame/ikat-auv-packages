@@ -1,0 +1,16 @@
+<package>
+  <description brief="auv_visulaization">
+
+     auv_visulaization
+
+  </description>
+  <author>Vinay Yadav</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/auv_visulaization</url>
+  <depend package="urdf"/>
+  <depend package="xacro"/>
+  <depend package="gazebo"/>
+</package>
+
+

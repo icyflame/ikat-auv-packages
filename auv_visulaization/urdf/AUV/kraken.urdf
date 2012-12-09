@@ -1,0 +1,178 @@
+<?xml version="1.0"?>
+<robot name="Kraken">
+  <!--gazebo reference="base">
+    <material>Gazebo/GrassFloor</material>
+  </gazebo-->
+  <link name="world">
+   <!--inertial>
+      <origin xyz="0 0 0" /> 
+      <mass value="0.01" />
+      <inertia  ixx="0.01" ixy="0.0"  ixz="0.0"  iyy="0.01"  iyz="0.0"  izz="0.01" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0"/>
+      <geometry>
+        <box size=".01 .01 .01" />
+      </geometry>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0"/>
+      <geometry>
+        <box size=".01 .01 .01" />
+      </geometry>
+    </collision-->
+  </link>
+  <!--gazebo reference="auv">
+    <material>Gazebo/Green</material>
+    <turnGravityOff>true</turnGravityOff>
+  </gazebo-->
+  <link name="auv_body">
+    <inertial>
+      <origin xyz="0 0 0" /> 
+      <mass value="35" />
+      <inertia  ixx="1" ixy="0.0"  ixz="0.0"  iyy="1"  iyz="0.0"  izz="1" />
+    </inertial>
+    <visual>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <mesh filename="package://auv_visulaization/urdf/AUV/mesh_files/new_model_kraken.stl"/>
+      </geometry>
+    </visual>
+    <collision>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <mesh filename="package://auv_visulaization/urdf/AUV/mesh_files/new_model_kraken.stl"/>
+      </geometry>
+    </collision>
+  </link>
+  <gazebo reference="auv_body">
+    <material>Gazebo/Green</material>
+    <turnGravityOff>true</turnGravityOff>
+  </gazebo>
+  <link name="right_heave_thruster">
+    <inertial>
+      <origin xyz="0 0 0" /> 
+      <mass value="0.01" />
+      <inertia  ixx="0.01" ixy="0.0"  ixz="0.0"  iyy="0.01"  iyz="0.0"  izz="0.01" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0"/>
+      <geometry>
+        <box size=".01 .01 .01" />
+      </geometry>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0"/>
+      <geometry>
+        <box size=".01 .01 .01" />
+      </geometry>
+    </collision>
+  </link>
+  <gazebo reference="right_heave_thruster">
+    <material>Gazebo/Red</material>
+    <turnGravityOff>true</turnGravityOff>
+  </gazebo>
+  <link name="left_heave_thruster">
+    <inertial>
+      <origin xyz="0 0 0" /> 
+      <mass value="0.01" />
+      <inertia  ixx="0.01" ixy="0.00"  ixz="0.0"  iyy="0.01"  iyz="0.0"  izz="0.001" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0"/>
+      <geometry>
+        <box size=".01 .01 .01" />
+      </geometry>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0"/>
+      <geometry>
+        <box size=".01 .01 .01" />
+      </geometry>
+    </collision>
+  </link>
+  <gazebo reference="left_heave_thruster">
+    <material>Gazebo/Red</material>
+    <turnGravityOff>true</turnGravityOff>
+  </gazebo>
+  <link name="right_surge_thruster">
+    <inertial>
+      <origin xyz="0 0 0" /> 
+      <mass value="0.01" />
+      <inertia  ixx="0.01" ixy="0.00"  ixz="0.0"  iyy="0.001"  iyz="0.0"  izz="0.01" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0"/>
+      <geometry>
+        <box size=".01 .01 .01" />
+      </geometry>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0"/>
+      <geometry>
+        <box size=".01 .01 .01" />
+      </geometry>
+    </collision>
+  </link>
+  <gazebo reference="right_surge_thruster">
+    <material>Gazebo/Blue</material>
+    <turnGravityOff>true</turnGravityOff>
+  </gazebo>
+  <link name="left_surge_thruster">
+    <inertial>
+      <origin xyz="0 0 0" /> 
+      <mass value="0.01" />
+      <inertia  ixx="0.01" ixy="0.00"  ixz="0.0"  iyy="0.001"  iyz="0.0"  izz="0.01" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0"/>
+      <geometry>
+        <box size=".01 .01 .01" />
+      </geometry>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0"/>
+      <geometry>
+        <box size=".01 .01 .01" />
+      </geometry>
+    </collision>
+  </link>
+  <gazebo reference="left_surge_thruster">
+    <material>Gazebo/Blue</material>
+    <turnGravityOff>true</turnGravityOff>
+  </gazebo>
+  <joint name="world_to_base_link" type="fixed">
+    <parent link="world"/>
+    <child link="auv_body"/>
+    <axis xyz="0 0 0"/>
+    <origin rpy="0 0.0 0" xyz="0 0 0"/>
+  </joint>
+  <joint name="right_heave_thruster_to_base_link" type="fixed">
+    <parent link="world"/>
+    <child link="right_heave_thruster"/>
+    <axis xyz="0 1 0"/>
+    <!--origin rpy="0 0.0 0" xyz="-0.428 -0.17 0.12"/-->
+    <origin rpy="0 0.0 0" xyz="-0.428 -0.37 0.12"/>
+  </joint>
+  <joint name="left_heave_thruster_to_base_link" type="fixed">
+    <parent link="world"/>
+    <child link="left_heave_thruster"/>
+    <axis xyz="0 1 0"/>
+    <!--origin rpy="0 0.0 0" xyz="-0.428 0.17 0.12"/-->
+    <origin rpy="0 0.0 0" xyz="-0.428 0.37 0.12"/>
+  </joint>
+  <joint name="right_surge_thruster_to_base_link" type="fixed">
+    <parent link="world"/>
+    <child link="right_surge_thruster"/>
+    <axis xyz="0 1 0"/>
+    <!--origin rpy="0 0.0 0" xyz="-0.88 -0.17 0.06"/-->
+    <origin rpy="0 0.0 0" xyz="-0.88 -0.37 0.06"/>
+  </joint>
+  <joint name="left_surge_thruster_to_base_link" type="fixed">
+    <parent link="world"/>
+    <child link="left_surge_thruster"/>
+    <axis xyz="0 1 0"/>
+    <origin rpy="0 0.0 0" xyz="-0.88 0.37 0.06"/>
+    <!--origin rpy="0 0.0 0" xyz="-0.88 0.17 0.06"/-->
+  </joint>
+</robot>
