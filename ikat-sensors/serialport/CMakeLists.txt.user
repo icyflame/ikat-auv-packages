@@ -24,7 +24,7 @@
    <value key="EditorConfiguration.Utf8BomBehavior" type="int">1</value>
    <value key="EditorConfiguration.addFinalNewLine" type="bool">true</value>
    <value key="EditorConfiguration.cleanIndentation" type="bool">true</value>
-   <value key="EditorConfiguration.cleanWhitespace" type="bool">true</value>
+   <value key="EditorConfiguration.cleanWhitespace" type="bool">false</value>
    <value key="EditorConfiguration.inEntireDocument" type="bool">false</value>
   </valuemap>
  </data>
@@ -38,7 +38,7 @@
    <value key="ProjectExplorer.Target.ActiveDeployConfiguration" type="int">0</value>
    <value key="ProjectExplorer.Target.ActiveRunConfiguration" type="int">0</value>
    <valuemap key="ProjectExplorer.Target.BuildConfiguration.0" type="QVariantMap">
-    <value key="CMakeProjectManager.CMakeBuildConfiguration.BuildDirectory" type="QString">/home/madhukar/ros_workspace/ikat-auv-packages/ikat-sensors/serialport/build</value>
+    <value key="CMakeProjectManager.CMakeBuildConfiguration.BuildDirectory" type="QString">/home/vinay/ros_workspace/ikat-auv-packages/ikat-sensors/serialport/build</value>
     <value key="CMakeProjectManager.CMakeBuildConfiguration.ToolChain" type="QString">ProjectExplorer.ToolChain.Gcc:/usr/bin/g++.x86-linux-generic-elf-32bit.</value>
     <value key="ProjectExplorer.BuildCOnfiguration.ToolChain" type="QString">ProjectExplorer.ToolChain.Gcc:/usr/bin/g++.x86-linux-generic-elf-32bit.</value>
     <valuemap key="ProjectExplorer.BuildConfiguration.BuildStepList.0" type="QVariantMap">
@@ -136,7 +136,7 @@
  </data>
  <data>
   <variable>ProjectExplorer.Project.Updater.EnvironmentId</variable>
-  <value type="QString">{5f0959ce-6ce0-4848-8486-2015cc758a51}</value>
+  <value type="QString">{46d065d6-9823-4de8-8520-2b7f90d1572a}</value>
  </data>
  <data>
   <variable>ProjectExplorer.Project.Updater.FileVersion</variable>
