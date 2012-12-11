@@ -19,6 +19,7 @@ bool DepthSensor::startTransmission()
         std::string response;
         /// setting baudrate on the sensor
         sendData("*9900BR=9600\r\n");
+
         //ros::spinOnce();
         if(recieveData(response))
         {
@@ -30,7 +31,6 @@ bool DepthSensor::startTransmission()
         }
         /// setting noparity on the sensor
         sendData("*9900PT=N\r\n");
-        //ros::spinOnce();
         if(recieveData(response))
         {
             ROS_INFO_STREAM("In response of *9900PT=N recieved signal is "<<response);
@@ -41,7 +41,6 @@ bool DepthSensor::startTransmission()
         }
         /// setting unit on the sensor
         sendData("*0100EW*0100UN=8\r\n");
-        //ros::spinOnce();
         if(recieveData(response))
         {
             ROS_INFO_STREAM("In response of *0100EW*0100UN=8 recieved signal is "<<response);
@@ -68,7 +67,6 @@ bool DepthSensor::sendData(const std::string &data)
 {
     boost::recursive_mutex::scoped_lock lock(mutex_);
     int datano = serial_port.writeData(data);
-    //std::cout<<"Written bytes "<<datano<<std::endl;
     if(datano>-1)
     {
         ROS_DEBUG_STREAM("send data : "<< data<<" to device ");
@@ -83,24 +81,19 @@ bool DepthSensor::sendData(const std::string &data)
 
 bool DepthSensor::recieveData(std::string &data)
 {
-    boost::recursive_mutex::scoped_lock lock(mutex_);
     data.clear();
-    char buff;
+    char buff,buff1;
     int datano =0;
-    //char *check;
     do
     {
-        //std::cout<<"in\n";
-        datano++;
-        buff='1';
+       buff1 = buff;
        if(!serial_port.readChar(buff))
        {
-           //std::cout<<datano<<std::endl;
            ROS_ERROR_STREAM("character not read properly hence aborting reading");
            return false;
        }
        data+=buff;
-    }while(buff!='\r');
+    }while((buff!='\n'));
     return true;
 }
 
@@ -109,11 +102,10 @@ bool DepthSensor::getDepth(float &depth)
     std::string response;
     if(sendData("*0100P3\r\n"))
     {
-        //ros::spinOnce();
         if(recieveData(response))
         {
             ROS_DEBUG_STREAM("In response of *0100P3 recieved signal is "<<response);
-            depth = current_depth = strtod(&(response.c_str())[5],NULL);
+            depth = current_depth = strtod(&(response.c_str()[5]),NULL);
             ROS_DEBUG_STREAM(depth);
             return true;
         }

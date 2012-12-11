@@ -1,4 +1,5 @@
 #include <serialport/IkatSerialPort.h>
+
 namespace ikat_sensor
 {
   IkatSerialPort::IkatSerialPort()
@@ -199,23 +200,15 @@ namespace ikat_sensor
       tcgetattr(file_descriptor, &port_setting);
       cfsetispeed(&port_setting,baudrate);
       cfsetospeed(&port_setting,baudrate);
-      /*port_setting.c_cflag |= (CLOCAL | CREAD);
+      port_setting.c_cflag |= (CLOCAL | CREAD);
       port_setting.c_cflag &= ~PARENB;
       port_setting.c_cflag &= ~CSTOPB;
       port_setting.c_cflag &= ~CSIZE;
       port_setting.c_cflag |= CS8;
-      //port_setting.c_cflag |= port_flags;
-      port_setting.c_iflag &= ~(IXON | IXOFF | IXANY);
-      port_setting.c_cflag &= ~CRTSCTS;*/
-      // new setting added by vinay
-      port_setting.c_iflag &= ~(IGNBRK | BRKINT | ICRNL |
-                               INLCR | PARMRK | INPCK | ISTRIP | IXON);
-      port_setting.c_oflag &= ~(OCRNL | ONLCR | ONLRET |
-                               ONOCR | OFILL | OLCUC | OPOST);
-      port_setting.c_cflag &= ~(PARENB|CSIZE|CSTOPB);
-      port_setting.c_cflag |= CS8;
-      port_setting.c_cc[VMIN] = 1;
-      port_setting.c_cc[VTIME] = 0;
+      port_setting.c_cflag |= port_flags;
+      port_setting.c_iflag |= (IXON | IXOFF | IXANY);
+      port_setting.c_cflag &= ~CRTSCTS;
+      port_setting.c_lflag &= ~(ICANON | ECHO | ECHOE | ISIG); 
       tcsetattr(file_descriptor,TCSANOW, &port_setting);
       return true;
   }

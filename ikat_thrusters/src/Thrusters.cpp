@@ -46,18 +46,18 @@ namespace ikat_hardware
       {   
           sprintf(thruster_data,"#0%dC%d-0%.3lf\r",ADD1,thruster_no,-voltage);
       }
+      usleep(50000);
   }
   
   bool Thruster::haultAllThruster()
   {
-      return (sendData(0,0.0)&&sendData(1,0.0)&&sendData(2,0.0));
-      sleep(1);
+      return (sendData(0.0,0)&&sendData(0.0,1)&&sendData(0.0,2)&&sendData(0.0,3));
   }
   
   Thruster::~Thruster()
   {
-      haultAllThruster();
-      serial_port.~IkatSerialPort();
+      //haultAllThruster();
+      //serial_port.~IkatSerialPort();
       ROS_DEBUG_STREAM("Thruster in deallocated");
   }
 } // end namespace ikar_hardware
