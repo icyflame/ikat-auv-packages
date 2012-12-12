@@ -17,7 +17,7 @@ void YawController::get_Data(float * Data)
     yaw_mt9 = Data[2];
 }
 
-void YawController::yawController(float setangle)
+void YawController::yawController(float setangle,float * buff)
 {
     steady_angle=setangle;
     error_yaw=steady_angle-yaw_mt9;
@@ -28,6 +28,8 @@ void YawController::yawController(float setangle)
     thruster_surge_left=-differential_surge_speed+horizontal_speed;
     thruster_surge_right= differential_surge_speed+horizontal_speed;
     speedCallibration();
+    buff[0]=thruster_surge_left;
+    buff[1]=thruster_surge_right;
 }
 
 void YawController::speedCallibration(void)

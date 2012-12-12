@@ -10,6 +10,7 @@
   <url>http://ros.org/wiki/ikat_thrusters</url>
   <depend package="roscpp"/>
   <depend package="serialport"/>
+  <depend package="ikat_sensor_data"/>
   <export>
     <cpp cflags="-I${prefix}/include/" lflags="-Wl,-rpath,${prefix}/lib -L${prefix}/lib -likat_thrusters" />
   </export>
