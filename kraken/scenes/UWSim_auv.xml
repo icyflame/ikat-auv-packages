@@ -14,7 +14,7 @@
     <crestFoamHeight> 2.2 </crestFoamHeight>
     <oceanSurfaceHeight> 0 </oceanSurfaceHeight>
     <fog>
-      <density> 0.1 </density>
+      <density> 0.1</density>
       <color>
 	<r>0</r>
 	<g>0.05</g>
@@ -46,10 +46,19 @@
       <y> 0</y>
       <z> -1.57 </z>
     </offsetr>
+    <enablePhysics> 1 </enablePhysics>
+	<gravity>
+	  <x>0.0</x>
+	  <y>0.0</y>
+	  <z>-9.8</z>
+	</gravity>
+	<!--physicsWater>
+	  
+	</physicsWater-->
   </simParams>
   <camera>
     <freeMotion> 1 </freeMotion>
-    <objectToTrack>kraken/base_link</objectToTrack>
+    <objectToTrack>girona500/base_link</objectToTrack>
     <fov> 60 </fov>
     <aspectRatio> 1.33 </aspectRatio>
     <near> 1 </near>
@@ -111,6 +120,21 @@
         <y>0 </y>
       </orientation>
     </virtualCamera>
+    <imu>
+      <name>imu</name>
+      <relativeTo>camera_bottom</relativeTo>
+      <position>
+        <x>0</x>
+        <y>0</y>
+        <z>0</z>
+      </position>  
+      <orientation>
+        <r>0</r>
+        <p>0</p>
+        <y>0</y>
+      </orientation>
+      <std>0.00000001</std>
+    </imu>
   </vehicle>
   <object>
     <name>terrain</name>
@@ -147,9 +171,9 @@
 	<vehicleName> kraken </vehicleName>
     </ArmToROSJointState>
     <ROSJointStateToArm> 
-	<topic>/uwsim/joint_state_command</topic>
-	<vehicleName> kraken </vehicleName>
-	</ROSJointStateToArm>
+      <topic>/uwsim/joint_state_command</topic>
+      <vehicleName> kraken </vehicleName>
+      </ROSJointStateToArm>
     <VirtualCameraToROSImage> 
       <cameraName>front</cameraName>
       <imageTopic> /uwsim/front_camera </imageTopic>
@@ -160,6 +184,11 @@
       <imageTopic> /uwsim/bottom_camera </imageTopic>
       <infoTopic> /uwsim/bottom_camera_info </infoTopic>
     </VirtualCameraToROSImage>
+    <ImuToROSImu>
+      <name>imu</name>
+      <topic>/uwsim/imu_data</topic>
+      <rate>10</rate>
+    </ImuToROSImu>
     <ROSTwistToPAT>
       <topic> /g500/twist</topic>
       <vehicleName> kraken </vehicleName>

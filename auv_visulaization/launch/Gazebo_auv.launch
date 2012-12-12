@@ -1,8 +1,7 @@
+<?xml version="1.0"?> 
 <launch>
-  <!--param name="/use_sim_time" value="true" /-->
-  <param name="robot_description" command="cat $(find auv_visulaization)/urdf/AUV/kraken.urdf" />
-  <!--node name="gazebo" pkg="gazebo" type="gazebo" args="$(find gazebo_worlds)/worlds/empty.world" respawn="false" output="screen"/>
-  <node name="gazebo_gui" pkg="gazebo" type="gui" respawn="false" output="screen"/-->
-  <node name="spawn_auv" pkg="gazebo" type="spawn_model" args="-urdf -param robot_description -model auv_model" respawn="false" output="screen" />
-  <node name="delete" pkg="auv_visulaization" type="setSimulator"/>
+  <param name="/use_sim_time" value="true" />
+  <node name="gazebo" pkg="gazebo" type="gazebo" args="$(find auv_visulaization)/worlds/empty.world" respawn="false" output="screen"/>
+  <node name="gazebo_gui" pkg="gazebo" type="gui" respawn="false" output="screen"/>
+  <!--node name="delete" pkg="auv_visulaization" type="setSimulator"/-->
 </launch>
