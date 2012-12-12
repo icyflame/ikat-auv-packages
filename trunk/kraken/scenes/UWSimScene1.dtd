@@ -2,12 +2,13 @@
 
 <!-- elementos oceanScene -->
 <!ELEMENT oceanState (windx?,windy?,windSpeed?,depth?,reflectionDamping?,waveScale?,isNotChoppy?,choppyFactor?,crestFoamHeight?,oceanSurfaceHeight?,fog?,color?,attenuation?)>
-<!ELEMENT simParams (disableShaders?,resw?,resh?,offsetp?,offsetr?)>
-<!ELEMENT vehicle (name,file,jointValues?,position?,orientation?,virtualCamera*, rangeSensor*)>
+<!ELEMENT simParams (disableShaders?,resw?,resh?,offsetp?,offsetr?,enablePhysics?,gravity?,physicsWater?)>
+<!ELEMENT vehicle (name,file,jointValues?,position?,orientation?,virtualCamera*, imu*)>
 <!ELEMENT virtualCamera (name,relativeTo,resw?,resh?,position?,orientation?,baseline?,frameId?, parameters?)>
 <!ELEMENT camera (freeMotion?,objectToTrack?,fov?,aspectRatio?,near?,far?,position?,lookAt?) >
+<!ELEMENT imu (name,relativeTo,position?,orientation?,std?)>
 <!ELEMENT object (name,file,position,orientation,offsetp?,offsetr?)>
-<!ELEMENT rosInterfaces ((ROSOdomToPAT*)?, (PATToROSOdom*)?, (ArmToROSJointState*)?, (ROSJointStateToArm*)?,(VirtualCameraToROSImage*)?, (ROSImageToHUD*)?,(ROSTwistToPAT*)?, (ROSPoseToPAT*)?)>
+<!ELEMENT rosInterfaces ((ROSOdomToPAT*)?, (PATToROSOdom*)?, (ArmToROSJointState*)?, (ROSJointStateToArm*)?,(VirtualCameraToROSImage*)?,(ImuToROSImu)?, (ROSImageToHUD*)?,(ROSTwistToPAT*)?, (ROSPoseToPAT*)?)>
 
 <!-- elementos comunes -->
 <!ELEMENT position (x,y,z)>
@@ -24,6 +25,7 @@
 <!ELEMENT g (#PCDATA)>
 <!ELEMENT b (#PCDATA)>
 <!ELEMENT p (#PCDATA)>
+<!ELEMENT std (#PCDATA)>
 
 <!-- elementos oceanState -->
 <!ELEMENT windx (#PCDATA)>
@@ -46,6 +48,17 @@
 <!ELEMENT eye_in_hand (#PCDATA)>
 <!ELEMENT resw (#PCDATA)>
 <!ELEMENT resh (#PCDATA)>
+<!ELEMENT enablePhysics (#PCDATA)>
+<!ELEMENT gravity (x,y,z)>
+<!ELEMENT physicsWater (size,position,resolution)>
+<!ELEMENT size (minX,maxX,minY,maxY,minZ,maxZ)>
+<!ELEMENT resolution (#PCDATA)>
+<!ELEMENT minX (#PCDATA)>
+<!ELEMENT maxX (#PCDATA)>
+<!ELEMENT minY (#PCDATA)>
+<!ELEMENT maxY (#PCDATA)>
+<!ELEMENT minZ (#PCDATA)>
+<!ELEMENT maxZ (#PCDATA)>
 
 <!--elementos camera -->
 <!ELEMENT freeMotion (#PCDATA)>
@@ -70,15 +83,11 @@
 <!ELEMENT baseline (#PCDATA)>
 <!ELEMENT frameId (#PCDATA)>
 
-<!--elementos rangeSensor >
-<!ELEMENT range (#PCDATA)>
-<!ELEMENT visible (#PCDATA)-->
 
 <!-- elementos vehicle -->
 <!ELEMENT name (#PCDATA)>
 <!ELEMENT file (#PCDATA)>
 <!ELEMENT jointValues (joint+)>
-
 <!ELEMENT joint (#PCDATA)>
 
 <!-- elementos rosinterfaces -->
@@ -87,7 +96,7 @@
 <!ELEMENT ArmToROSJointState  (topic, vehicleName, rate?)>
 <!ELEMENT ROSJointStateToArm  (topic,vehicleName)>
 <!ELEMENT VirtualCameraToROSImage (cameraName,imageTopic,infoTopic,rate?)>
-<!--ELEMENT RangeSensorToROSRange (name,topic,rate?)-->
+<!ELEMENT ImuToROSImu (name,topic,rate?)>
 <!ELEMENT ROSImageToHUD (width,height,posx?,posy?,scale?,imageTopic,infoTopic?)>
 <!ELEMENT ROSTwistToPAT (topic,vehicleName)>
 <!ELEMENT ROSPoseToPAT (topic,vehicleName)>
@@ -108,3 +117,9 @@
 <!-- elementos vcamtoROSImage -->
 <!ELEMENT cam (#PCDATA)>
 <!ELEMENT info (#PCDATA)>
+
+<!-- elementos physics -->
+<!ELEMENT physics (mass,inertia,collisionShapeType)>
+<!ELEMENT mass (#PCDATA)>
+<!ELEMENT inertia (x,y,z)>
+<!ELEMENT collisionShapeType (#PCDATA)>
