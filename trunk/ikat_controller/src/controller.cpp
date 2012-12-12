@@ -6,6 +6,7 @@
 #include <ikat_thrusters/Thrusters.hpp>
 #include <ikat_controller/DepthController.h>
 #include <ikat_controller/YawController.h>
+#include <ikat_sensor_data/thruster_data.h>
 
 
 // Thrusters definition
@@ -82,39 +83,33 @@ int main(int argc, char **argv)
 {
       ros::init(argc, argv, "controller");
       ros::NodeHandle n;
+      ros::NodeHandle p;
       ros::Subscriber depth_callback = n.subscribe("current_depth", 10,depthCallback);
       ros::Subscriber mt9_callback =   n.subscribe("Orientation_data_from_MT9", 10, mt9Callback);
       //ros::Subscriber task_planner_callback=n.subscribe("control_signal",10, controllSignalCallback);
-      ros::Rate loopRate(1);
-      std::string port_name = "/dev/ttyACM0";
-      ikat_hardware::Thruster th(port_name,9600);
-      if(th.connectThrusters())
-         cout<<"The serial port of thruster is connected\n";
+      ros::Publisher thrusterPub = p.advertise<ikat_sensor_data::thruster_data>("thrusterControlData",3);
+      ros::Rate loopRate(5);
+      ikat_sensor_data::thruster_data thrusterData;
+      float * buff = new float[2];
       int is_image = 0;
       while(ros::ok())
       {
           ros::spinOnce();
           if(!is_image)
           {
-            yawobj.yawController(30);
-            depthobj.depthController(.7);
+              yawobj.yawController(30,buff);
+              thrusterData.heaveThrust=depthobj.depthController(.7);
+              thrusterData.surgeLeft = buff[0];
+              thrusterData.surgeRight = buff[1];
+              thrusterPub.publish(thrusterData);
           }
           else
           {
               //yawobj.yawControllerImage();
               //obj.depthControllerImage();
           }
-
-          ///////////////////////////////////////////////
-          //////sending information to thrusters
-          ///////////////////////////////////////////////
-          //th.sendData(obj.thruster_surge_left,SurgeLeftThruster);
-          //th.sendData(obj.thruster_surge_right,SurgeRightThruster);
-          //th.sendData(obj.vertical_speed,DepthRightThruster);
-          //th.sendData(obj.vertical_speed,DepthLeftThruster);
-
           loopRate.sleep();
-
       }
+      delete(buff);
       return 0;
 }
