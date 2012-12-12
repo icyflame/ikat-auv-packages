@@ -7,7 +7,7 @@
 <!ELEMENT virtualCamera (name,relativeTo,resw?,resh?,position?,orientation?,baseline?,frameId?, parameters?)>
 <!ELEMENT camera (freeMotion?,objectToTrack?,fov?,aspectRatio?,near?,far?,position?,lookAt?) >
 <!ELEMENT imu (name,relativeTo,position?,orientation?,std?)>
-<!ELEMENT object (name,file,position,orientation,offsetp?,offsetr?)>
+<!ELEMENT object (name,file,position,orientation,offsetp?,offsetr?,physics?)>
 <!ELEMENT rosInterfaces ((ROSOdomToPAT*)?, (PATToROSOdom*)?, (ArmToROSJointState*)?, (ROSJointStateToArm*)?,(VirtualCameraToROSImage*)?,(ImuToROSImu)?, (ROSImageToHUD*)?,(ROSTwistToPAT*)?, (ROSPoseToPAT*)?)>
 
 <!-- elementos comunes -->

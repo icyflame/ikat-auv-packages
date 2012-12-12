@@ -1,4 +1,4 @@
 <?xml version="1.0"?>
 <launch>
-  <node name="UWSim" pkg="UWSim" type="UWSim" args="--disableShaders --configfile $(find UWSim)/kraken/scenes/UWSim_auv.xml"/>
+  <node name="UWSim" pkg="UWSim" type="UWSim" args="--disableShaders --configfile $(find UWSim)/kraken/scenes/UWSim_scene.xml"/>
 </launch>

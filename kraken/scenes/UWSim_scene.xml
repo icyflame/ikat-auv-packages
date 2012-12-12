@@ -50,11 +50,8 @@
 	<gravity>
 	  <x>0.0</x>
 	  <y>0.0</y>
-	  <z>0</z>
+	  <z>-9.8</z>
 	</gravity>
-	<!--physicsWater>
-	  
-	</physicsWater-->
   </simParams>
   <camera>
     <freeMotion> 1 </freeMotion>
@@ -140,8 +137,8 @@
     <name>scene</name>
     <file>kraken/scenes/scene.urdf</file>
     <position>
-      <x> 0</x>
-      <y> 0 </y>
+      <x> -12.5 </x>
+      <y> -22 </y>
       <z> 9 </z>
     </position>
     <orientation>
@@ -150,197 +147,41 @@
       <y>0</y>
     </orientation>
   </vehicle>
-  <!--object>
-    <name>marker</name>
-    <file>kraken/objects/marker.osg</file>
-    <position>
-      <x> 3 </x>
-      <y> 3 </y>
-      <z> 9 </z>
-    </position>
-    <orientation>
-      <r>0</r>
-      <p>0</p>
-      <y>0</y>
-    </orientation>
-    <offsetp>
-      <x>0</x>
-      <y>-0</y>
-      <z>0</z>
-    </offsetp>
-    <offsetr>
-      <x> 0</x>
-      <y> 0</y>
-      <z> 0 </z>
-    </offsetr>
-    <physics>
-      <mass> 15 </mass>
-      <inertia> 
-        <x> 0</x>
-        <y> 0 </y>
-        <z> 0 </z>
-      </inertia>
-      <collisionShapeType> box </collisionShapeType>
-    </physics>
-  </object>
-  <object>
-    <name>buoy_red</name>
-    <file>kraken/objects/buoy_red.osg</file>
-    <position>
-      <x> 2 </x>
-      <y> 2 </y>
-      <z> 9 </z>
-    </position>
-    <orientation>
-      <r>0</r>
-      <p>0</p>
-      <y>0</y>
-    </orientation>
-    <offsetp>
-      <x>0</x>
-      <y>-0</y>
-      <z>0</z>
-    </offsetp>
-    <offsetr>
-      <x> 0</x>
-      <y> 0</y>
-      <z> 0 </z>
-    </offsetr>
-    <physics>
-      <mass> 15 </mass>
-      <inertia> 
-        <x> 0</x>
-        <y> 0 </y>
-        <z> 0 </z>
-      </inertia>
-      <collisionShapeType> box </collisionShapeType>
-    </physics>
-  </object>
-  <object>
-    <name>buoy_blue</name>
-    <file>kraken/objects/buoy_blue.osg</file>
-    <position>
-      <x> 1 </x>
-      <y> 1 </y>
-      <z> 9 </z>
-    </position>
-    <orientation>
-      <r>0</r>
-      <p>0</p>
-      <y>0</y>
-    </orientation>
-    <offsetp>
-      <x>0</x>
-      <y>-0</y>
-      <z>0</z>
-    </offsetp>
-    <offsetr>
-      <x> 0</x>
-      <y> 0</y>
-      <z> 0 </z>
-    </offsetr>
-    <physics>
-      <mass> 15 </mass>
-      <inertia> 
-        <x> 0</x>
-        <y> 0 </y>
-        <z> 0 </z>
-      </inertia>
-      <collisionShapeType> box </collisionShapeType>
-    </physics>
-  </object>
-  <object>
-    <name>buoy_green</name>
-    <file>kraken/objects/buoy_green.osg</file>
-    <position>
-      <x> 0 </x>
-      <y> 1 </y>
-      <z> 9 </z>
-    </position>
-    <orientation>
-      <r>0</r>
-      <p>0</p>
-      <y>0</y>
-    </orientation>
-    <offsetp>
-      <x>0</x>
-      <y>0</y>
-      <z>0</z>
-    </offsetp>
-    <offsetr>
-      <x> 0</x>
-      <y> 0</y>
-      <z> 0 </z>
-    </offsetr>
-    <physics>
-      <mass> 15 </mass>
-      <inertia> 
-        <x> 0</x>
-        <y> 0 </y>
-        <z> 0 </z>
-      </inertia>
-      <collisionShapeType> box </collisionShapeType>
-    </physics>
-  </object>
-  <object>
-    <name>terrain</name>
-    <file>kraken/terrain/pool.osg</file>
-    <position>
-      <x> -12.5 </x>
-      <y> -22 </y>
-      <z> 9.0 </z>
-    </position>
-    <orientation>
-      <r>0</r>
-      <p>3.14</p>
-      <y>0</y>
-    </orientation>
-    <offsetp>
-      <x>0</x>
-      <y>-0</y>
-      <z>0</z>
-    </offsetp>
-    <offsetr>
-      <x> 0</x>
-      <y> 0</y>
-      <z> 0 </z>
-    </offsetr>
-  </object-->
   <rosInterfaces>
     <ROSOdomToPAT>
-      <topic> /dataNavigator </topic>
+      <topic> /kraken/dataNavigator </topic>
       <vehicleName> kraken </vehicleName>
       <visualize> 1 </visualize>
     </ROSOdomToPAT>
     <ArmToROSJointState> 
-	<topic>/uwsim/joint_state</topic>
+	<topic>/kraken/joint_state</topic>
 	<vehicleName> kraken </vehicleName>
     </ArmToROSJointState>
     <ROSJointStateToArm> 
-      <topic>/uwsim/joint_state_command</topic>
+      <topic>/kraken/joint_state_command</topic>
       <vehicleName> kraken </vehicleName>
       </ROSJointStateToArm>
     <VirtualCameraToROSImage> 
       <cameraName>front</cameraName>
-      <imageTopic> /uwsim/front_camera </imageTopic>
-      <infoTopic> /uwsim/front_camera_info </infoTopic>
+      <imageTopic> /kraken/front_camera </imageTopic>
+      <infoTopic> /kraken/front_camera_info </infoTopic>
     </VirtualCameraToROSImage>
     <VirtualCameraToROSImage> 
       <cameraName>bottom</cameraName>
-      <imageTopic> /uwsim/bottom_camera </imageTopic>
-      <infoTopic> /uwsim/bottom_camera_info </infoTopic>
+      <imageTopic> /kraken/bottom_camera </imageTopic>
+      <infoTopic> /kraken/bottom_camera_info </infoTopic>
     </VirtualCameraToROSImage>
     <ImuToROSImu>
       <name>imu</name>
-      <topic>/uwsim/imu_data</topic>
+      <topic>/kraken/imu_data</topic>
       <rate>10</rate>
     </ImuToROSImu>
     <ROSTwistToPAT>
-      <topic> /g500/twist</topic>
+      <topic> /kraken/twist</topic>
       <vehicleName> kraken </vehicleName>
     </ROSTwistToPAT>
     <ROSPoseToPAT>
-      <topic> /g500/pose</topic>
+      <topic> /kraken/pose</topic>
       <vehicleName> kraken </vehicleName>
     </ROSPoseToPAT>
   </rosInterfaces>
