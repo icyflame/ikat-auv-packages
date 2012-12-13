@@ -17,19 +17,19 @@
   		xmlns:physics="http://playerstage.sourceforge.net/gazebo/xmlschema/#physics"
        	xmlns:xacro="http://www.ros.org/wiki/xacro">
 	
-	<xacro:macro name="pool">
+	<xacro:macro name="pool" params="*origin">
 	  <link name="pool">
         <visual>
   		  <geometry>
 		    <mesh filename="package://UWSim/kraken/terrain/pool.osg"/>
   		  </geometry>
-  		  <origin rpy="0 3.14 0" xyz="0 0 0"/>
+  		  <insert_block name="origin" />
   	    </visual>
         <collision>
           <geometry>
 		    <mesh filename="package://UWSim/kraken/terrain/pool.osg"/>
   		  </geometry>
-  		  <origin rpy="0 0 0" xyz="0 0 0"/>
+  		  <insert_block name="origin" />
         </collision>
       </link>
     </xacro:macro>

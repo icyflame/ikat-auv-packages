@@ -26,9 +26,11 @@
   <include filename="$(find UWSim)/kraken/scenes/objects/dropper.urdf.xacro"/>
   <include filename="$(find UWSim)/kraken/scenes/objects/pool.urdf.xacro"/>
   <include filename="$(find UWSim)/kraken/scenes/objects/L_rod.urdf.xacro"/>
-  <xacro:pool />
+  <xacro:pool >
+    <origin xyz="0 0 0" rpy="0 0 0.0" />
+  </xacro:pool>
   <xacro:marker position = "gate" parent = "pool">
-    <origin xyz="2 2 0" rpy="0 0 0.0" />
+    <origin xyz="0 0 0" rpy="0 0 0.0" />
   </xacro:marker>
   <xacro:buoy_blue position = "gate" parent = "pool">
     <origin xyz="3 3 0" rpy="0 0 0.0" />

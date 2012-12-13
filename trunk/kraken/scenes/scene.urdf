@@ -9,13 +9,13 @@
       <geometry>
         <mesh filename="package://UWSim/kraken/terrain/pool.osg"/>
       </geometry>
-      <origin rpy="0 3.14 0" xyz="0 0 0"/>
+      <origin rpy="0 0 0.0" xyz="0 0 0"/>
     </visual>
     <collision>
       <geometry>
         <mesh filename="package://UWSim/kraken/terrain/pool.osg"/>
       </geometry>
-      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <origin rpy="0 0 0.0" xyz="0 0 0"/>
     </collision>
   </link>
   <link name="gate_marker">
@@ -35,7 +35,7 @@
   <joint name="gate_marker_to_pool" type="fixed">
     <parent link="pool"/>
     <child link="gate_marker"/>
-    <origin rpy="0 0 0.0" xyz="2 2 0"/>
+    <origin rpy="0 0 0.0" xyz="0 0 0"/>
   </joint>
   <link name="gate_buoy_blue">
     <visual>
