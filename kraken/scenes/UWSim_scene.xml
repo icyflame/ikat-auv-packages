@@ -82,12 +82,12 @@
     </position>
     <orientation>
       <r>0</r>
-      <p>3.14</p>
+      <p>0</p>
       <y>0</y>
     </orientation>
     <virtualCamera>
       <name>front</name>
-      <relativeTo>camera_front</relativeTo>
+      <relativeTo>camera_front_optical</relativeTo>
       <resw> 320</resw>
       <resh> 240 </resh>
       <position>
@@ -98,12 +98,12 @@
       <orientation>
         <r>0</r>
         <p>0</p>
-        <y>0 </y>
+        <y>3.14 </y>
       </orientation>
     </virtualCamera>
     <virtualCamera>
       <name>bottom</name>
-      <relativeTo>camera_bottom</relativeTo>
+      <relativeTo>camera_bottom_optical</relativeTo>
       <resw> 320</resw>
       <resh> 240 </resh>
       <position>
@@ -114,12 +114,12 @@
       <orientation>
         <r>0</r>
         <p>0</p>
-        <y>0 </y>
+        <y>3.14 </y>
       </orientation>
     </virtualCamera>
     <imu>
       <name>imu</name>
-      <relativeTo>camera_bottom</relativeTo>
+      <relativeTo>imu_link</relativeTo>
       <position>
         <x>0</x>
         <y>0</y>
@@ -132,13 +132,28 @@
       </orientation>
       <std>0.00000001</std>
     </imu>
+    <pressureSensor>
+      <name>pressureSensor</name>
+      <relativeTo>depth_sensor</relativeTo>
+      <position>
+        <x>0</x>
+        <y>0</y>
+        <z>0.0</z>
+      </position>  
+      <orientation>
+        <r>0</r>
+        <p>0</p>
+        <y>0</y>
+      </orientation>
+      <std>0.02</std>
+    </pressureSensor>
   </vehicle>
   <vehicle>
     <name>scene</name>
     <file>kraken/scenes/scene.urdf</file>
     <position>
-      <x> -12.5 </x>
-      <y> -22 </y>
+      <x> 0 </x>
+      <y> 0 </y>
       <z> 9 </z>
     </position>
     <orientation>
@@ -176,6 +191,11 @@
       <topic>/kraken/imu_data</topic>
       <rate>10</rate>
     </ImuToROSImu>
+    <PressureSensorToROS>
+      <name>pressureSensor</name>
+      <topic>/kraken/depth</topic>
+      <rate>5</rate>
+    </PressureSensorToROS>
     <ROSTwistToPAT>
       <topic> /kraken/twist</topic>
       <vehicleName> kraken </vehicleName>

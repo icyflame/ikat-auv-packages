@@ -3,12 +3,13 @@
 <!-- elementos oceanScene -->
 <!ELEMENT oceanState (windx?,windy?,windSpeed?,depth?,reflectionDamping?,waveScale?,isNotChoppy?,choppyFactor?,crestFoamHeight?,oceanSurfaceHeight?,fog?,color?,attenuation?)>
 <!ELEMENT simParams (disableShaders?,resw?,resh?,offsetp?,offsetr?,enablePhysics?,gravity?,physicsWater?)>
-<!ELEMENT vehicle (name,file,jointValues?,position?,orientation?,virtualCamera*, imu*)>
+<!ELEMENT vehicle (name,file,jointValues?,position?,orientation?,virtualCamera*, imu*, pressureSensor*)>
 <!ELEMENT virtualCamera (name,relativeTo,resw?,resh?,position?,orientation?,baseline?,frameId?, parameters?)>
 <!ELEMENT camera (freeMotion?,objectToTrack?,fov?,aspectRatio?,near?,far?,position?,lookAt?) >
 <!ELEMENT imu (name,relativeTo,position?,orientation?,std?)>
+<!ELEMENT pressureSensor (name,relativeTo,position?,orientation?, std?)>
 <!ELEMENT object (name,file,position,orientation,offsetp?,offsetr?,physics?)>
-<!ELEMENT rosInterfaces ((ROSOdomToPAT*)?, (PATToROSOdom*)?, (ArmToROSJointState*)?, (ROSJointStateToArm*)?,(VirtualCameraToROSImage*)?,(ImuToROSImu)?, (ROSImageToHUD*)?,(ROSTwistToPAT*)?, (ROSPoseToPAT*)?)>
+<!ELEMENT rosInterfaces ((ROSOdomToPAT*)?, (PATToROSOdom*)?, (ArmToROSJointState*)?, (ROSJointStateToArm*)?,(VirtualCameraToROSImage*)?,(ImuToROSImu)?, (PressureSensorToROS*)?,(ROSImageToHUD*)?,(ROSTwistToPAT*)?, (ROSPoseToPAT*)?)>
 
 <!-- elementos comunes -->
 <!ELEMENT position (x,y,z)>
@@ -97,6 +98,7 @@
 <!ELEMENT ROSJointStateToArm  (topic,vehicleName)>
 <!ELEMENT VirtualCameraToROSImage (cameraName,imageTopic,infoTopic,rate?)>
 <!ELEMENT ImuToROSImu (name,topic,rate?)>
+<!ELEMENT PressureSensorToROS (name, topic, rate?)>
 <!ELEMENT ROSImageToHUD (width,height,posx?,posy?,scale?,imageTopic,infoTopic?)>
 <!ELEMENT ROSTwistToPAT (topic,vehicleName)>
 <!ELEMENT ROSPoseToPAT (topic,vehicleName)>
