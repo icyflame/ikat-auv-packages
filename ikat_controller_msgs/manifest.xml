@@ -1,0 +1,18 @@
+<package>
+  <description brief="ikat_controller_msgs">
+
+     ikat_controller_msgs
+
+  </description>
+  <author>Vinay Yadav</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/ikat_controller_msgs</url>
+  <depend package="roscpp"/>
+  <depend package="std_msgs"/>
+  <export>
+    <cpp cflags="-I${prefix}/msg/cpp"/>
+  </export>
+</package>
+
+

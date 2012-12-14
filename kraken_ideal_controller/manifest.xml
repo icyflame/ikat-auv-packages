@@ -1,0 +1,19 @@
+<package>
+  <description brief="kraken_ideal_controller">
+
+     kraken_ideal_controller
+
+  </description>
+  <author>Vinay Yadav</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/kraken_ideal_controller</url>
+  <depend package="roscpp"/>
+  <depend package="std_msgs"/>
+  <depend package="ikat_controller_msgs"/>
+  <depend package="nav_msgs"/>
+  <depend package="geometry_msgs"/>
+  <depend package="tf"/>
+</package>
+
+

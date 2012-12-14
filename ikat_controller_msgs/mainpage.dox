@@ -1,0 +1,20 @@
+/**
+\mainpage
+\htmlinclude manifest.html
+
+\b ikat_controller_msgs 
+
+<!-- 
+Provide an overview of your package.
+-->
+
+-->
+ideal controller listen to "/kraken/control_data" and msg type ikat_controller_msgs::control_operations
+this msg has 3 field
+surge >0 forward <0 backward
+heave >0 downward <0 upward
+angle >0 positive yaw <0 negative yaw
+
+So your program need to publish only these values and enjoy :)
+
+*/
