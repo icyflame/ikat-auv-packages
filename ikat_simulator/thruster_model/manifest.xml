@@ -1,0 +1,15 @@
+<package>
+  <description brief="thruster_model">
+
+     thruster_model
+
+  </description>
+  <author>Vinay Yadav</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/thruster_model</url>
+  <depend package="roscpp"/>
+
+</package>
+
+
