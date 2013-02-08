@@ -1,0 +1,17 @@
+<package>
+  <description brief="ikat_dynamics">
+
+     ikat_dynamics
+
+  </description>
+  <author>Vinay Yadav</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/ikat_dynamics</url>
+  <depend package="roscpp"/>
+  <depend package="std_msgs"/>
+  <depend package="ikat_sensor_data"/>
+
+</package>
+
+
