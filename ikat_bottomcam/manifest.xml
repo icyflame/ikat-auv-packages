@@ -1,0 +1,21 @@
+<package>
+  <description brief="ikat_bottomcam">
+
+     ikat_bottomcam
+
+  </description>
+  <author>Vinay Yadav</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/ikat_bottomcam</url>
+  <depend package="roscpp"/>
+  <depend package="opencv2"/>
+  <depend package="std_msgs"/>
+  <depend package="ikat_ip_data"/>
+  <depend package="blob"/>
+  <export>
+    <cpp cflags="-I${prefix}/include/" lflags="-Wl,-rpath,${prefix}/lib -L${prefix}/lib -likat_thrusters" />
+  </export>
+</package>
+
+

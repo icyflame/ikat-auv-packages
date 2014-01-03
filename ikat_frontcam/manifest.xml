@@ -1,0 +1,21 @@
+<package>
+  <description brief="ikat_frontcam">
+
+     ikat_frontcam
+
+  </description>
+  <author>Vinay Yadav</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/ikat_frontcam</url>
+  <depend package="roscpp"/>
+  <depend package="std_msgs"/>
+  <depend package="opencv2"/>
+  <depend package="ikat_ip_data"/>
+  <depend package="blob"/>
+  <export>
+    <cpp cflags="-I${prefix}/include/" lflags="-Wl,-rpath,${prefix}/lib -L${prefix}/lib -likat_frontcam" />
+  </export>
+</package>
+
+
