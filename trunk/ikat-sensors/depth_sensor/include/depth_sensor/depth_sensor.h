@@ -4,6 +4,7 @@
 #include <ros/ros.h>
 #include <serialport/IkatSerialPort.h>
 #include <boost/thread.hpp>
+#include <unistd.h>
 
 namespace ikat_sensor
 {

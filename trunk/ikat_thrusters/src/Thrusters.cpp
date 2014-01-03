@@ -40,7 +40,7 @@ namespace ikat_hardware
       }
       if(voltage>=0.0)
       {
-          sprintf(thruster_data,"#0%dC%d-0%.3lf\r",ADD1,thruster_no,voltage);
+          sprintf(thruster_data,"#0%dC%d+0%.3lf\r",ADD1,thruster_no,voltage);
       }
       else
       {   

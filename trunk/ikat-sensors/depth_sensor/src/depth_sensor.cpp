@@ -81,6 +81,7 @@ bool DepthSensor::sendData(const std::string &data)
 
 bool DepthSensor::recieveData(std::string &data)
 {
+    usleep(1000);
     data.clear();
     char buff,buff1;
     int datano =0;

@@ -42,11 +42,11 @@ void thruster::strcmb(double a,int b)
     }
     if(thv>=0.0)
     {
-        byteswritten=sprintf(buff,"#0%dC%d-0%.3lf\r",ADD1,chan,thv);
+        byteswritten=sprintf(buff,"#0%dC%d+0%.3lf\r",ADD1,chan,thv);
     }
     else
     {   
-        byteswritten=sprintf(buff,"#0%dC%d-0%.3lf\r",ADD1,chan,-thv);
+        byteswritten=sprintf(buff,"#0%dC%d-0%.3lf\r",ADD1,chan,-thv);//"#0%dC%d-0%.3lf\r"
     }
     str = buff;
 }
