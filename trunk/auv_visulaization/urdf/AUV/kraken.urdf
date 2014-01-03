@@ -1,12 +1,12 @@
 <?xml version="1.0"?>
 <robot name="Kraken">
 <!-- main body of Auv-->
-  <!--link name="world"/>
+  <link name="world"/>
   <joint name ="world_to_base_link" type="fixed">
     <parent link="world"/>
     <child link="base_link"/>
     <origin rpy="0 0 0" xyz="0.0 0.0 0.0"/>
-  </joint-->
+  </joint>
   <link name="base_link">
     <inertial>
       <origin xyz="0 0 0" /> 

@@ -39,7 +39,7 @@ bool MT9Sensor::setupFilter()
     short nMode = MT_LOGEULER;
     short nSampleFrequency = 100;
     ROS_INFO("Loading MotionTracker library...");
-    module = dlopen("libmtobject.so",RTLD_NOW);
+    module = dlopen("/home/vinay/ros_workspace/ikat-auv-packages/ikat-sensors/mt9_sensor/lib/libmtobject.so",RTLD_LAZY);
     if (!module)
     {
         ROS_ERROR("Couldn't open MotionTracker library: %s\n", dlerror());
