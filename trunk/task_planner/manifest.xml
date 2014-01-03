@@ -1,0 +1,20 @@
+<package>
+  <description brief="task_planner">
+
+     task_planner
+
+  </description>
+  <author>IKAT</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/task_planner</url>
+  <depend package="roscpp"/>
+  <depend package="std_msgs"/>
+  <depend package="task_planner_data"/>
+  <export>
+    <cpp cflags="-I${prefix}/include" lflags="-L${prefix}/lib"/>
+  </export>
+
+</package>
+
+
