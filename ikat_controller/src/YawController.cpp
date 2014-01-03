@@ -1,5 +1,4 @@
 #include <ikat_controller/YawController.h>
-
 YawController::YawController(void)
 {
     roll_mt9=0,pitch_mt9=0, yaw_mt9=0;
@@ -30,6 +29,7 @@ void YawController::yawController(float setangle,float * buff)
     speedCallibration();
     buff[0]=thruster_surge_left;
     buff[1]=thruster_surge_right;
+    //std::cout<<"Error Yaw : "<<error_yaw<<std::endl;
 }
 
 void YawController::speedCallibration(void)

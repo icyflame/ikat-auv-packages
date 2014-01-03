@@ -21,7 +21,7 @@ namespace ikat_sensor
   }
 
   IkatSerialPort::IkatSerialPort(const std::string &name, int rate)
-  {
+  {	
       port_is_open = false;
       setPortName(name);
       setRate(rate);
@@ -248,4 +248,4 @@ namespace ikat_sensor
       return false;
   }
 
-}
+}	

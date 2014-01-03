@@ -12,9 +12,14 @@
   <depend package="serialport"/>
   <depend package="ikat_sensor_data"/>
   <depend package="ikat_thrusters"/>
+  <depend package="ikat_ip_data"/>
+  <depend package="task_planner"/>
+  <depend package="task_planner_data"/>
+
   <export>
   <cpp cflags="-I${prefix}/include/" lflags="-Wl,-rpath,${prefix}/lib -L${prefix}/lib -lDepthController" />
   <cpp cflags="-I${prefix}/include/" lflags="-Wl,-rpath,${prefix}/lib -L${prefix}/lib -lYawController" />
+  <cpp cflags="-I${prefix}/include/" lflags="-Wl,-rpath,${prefix}/lib -L${prefix}/lib -lImageController" />
   </export>
 
 </package>
