@@ -9,12 +9,14 @@ BottomCam::BottomCam(int deviceIdno, const string &markerThresh, const string &b
         fileMT >> thresholdValMarker[i];
         fileBT >> thresholdValBin[i];
     }
+    cout << thresholdValMarker[0] << thresholdValMarker[1] << endl;
     deviceId = deviceIdno;
     markerData = n.advertise<ikat_ip_data::ip_marker_data>("MarkerData", 1);
     //binData = n.advertise<>
     elem = getStructuringElement(MORPH_RECT, Size(5,5));
     data = new markerDataStruct;
-    data = NULL;
+    data->prev_center.x = 0;
+    data->prev_center.y = 0;
 }
 
 void BottomCam::sleepCam()
@@ -22,7 +24,7 @@ void BottomCam::sleepCam()
     bottomcamera.release();
 }
 
-void BottomCam::wakeCam()
+bool BottomCam::wakeCam()
 {
     if(bottomcamera.open(deviceId))
     {
@@ -30,27 +32,29 @@ void BottomCam::wakeCam()
         bottomcamera.set(CV_CAP_PROP_FRAME_WIDTH,640);
         bottomcamera.set(CV_CAP_PROP_FRAME_HEIGHT,480);
         bottomcamera.set(CV_CAP_PROP_FPS,5);
+        return true;
     }
     else
     {
         cout << "The camera did not started successfully" << endl;
-        ros::shutdown();
+        return false;
     }
 }
 
-void BottomCam::wakeCam(const string &fileName)
+bool BottomCam::wakeCam(const string &fileName)
 {
-    if(bottomcamera.open(fileName.c_str()))
+    if(bottomcamera.open(fileName))
     {
         cout << "The camera is opened Successfully" << endl;
         bottomcamera.set(CV_CAP_PROP_FRAME_WIDTH,640);
         bottomcamera.set(CV_CAP_PROP_FRAME_HEIGHT,480);
         bottomcamera.set(CV_CAP_PROP_FPS,5);
+        return true;
     }
     else
     {
         cout << "The camera did not started successfully" << endl;
-        ros::shutdown();
+        return false;
     }
 }
 
@@ -74,7 +78,7 @@ void BottomCam::markerDetect()
     }
     Mat I_proc(&I_blob,false);
     findContours(I_proc, contours,hierarchy, CV_RETR_TREE, CV_CHAIN_APPROX_SIMPLE, Point(0, 0));
-    if(!contours.empty())
+    if(contours.empty())
     {
         if(data == NULL){}
         else
@@ -91,10 +95,14 @@ void BottomCam::markerDetect()
     }
     else
     {
+        vector<Point> polytemp;
         for(int i = 0; i < contours.size(); i++)
         {
             if(contourArea(Mat(contours[i])) > 2000)
-                approxPolyDP(contours[i], approxpoly[i], 5, true);
+            {
+                approxPolyDP(Mat(contours[i]), polytemp, 3, true);
+                approxpoly.push_back(polytemp);
+            }
         }
         RotatedRect rectcontour;
         int maxlength = 10;
@@ -123,7 +131,6 @@ void BottomCam::markerDetect()
             rectcontour.points(rect_points);
             for( int j = 0; j < 4; j++ )
                 line(I, rect_points[j], rect_points[(j+1)%4], Scalar(255), 1, 8 );
-
         }
         markerData.publish(msg);
     }

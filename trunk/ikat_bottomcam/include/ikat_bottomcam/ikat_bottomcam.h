@@ -42,7 +42,7 @@ public:
     void markerDetect();
     void binDetect();
     void sleepCam();
-    void wakeCam();
-    void wakeCam(const string &);
+    bool wakeCam();
+    bool wakeCam(const string &);
     ~BottomCam();
 };
