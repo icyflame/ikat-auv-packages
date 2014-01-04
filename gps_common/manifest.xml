@@ -1,0 +1,22 @@
+<package>
+  <description brief="gps_common">
+
+     ROS Driver for XSens MT/MTi/MTi-G devices.
+
+  </description>
+  <author>Francis Colas</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/xsens_driver</url>
+  <depend package="roscpp"/>
+  <!--depend package="message_filters"/>
+  <depend package="message_generation"/-->
+  <depend package="std_msgs"/>
+  <depend package="sensor_msgs"/>
+  <depend package="geometry_msgs"/>
+  <depend package="nav_msgs"/>
+  <!--depend package="message_runtime"/-->
+
+</package>
+
+
