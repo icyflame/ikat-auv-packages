@@ -23,18 +23,19 @@ int main(int argc, char ** argv)
     }
     ros::NodeHandle n;
     ros::Subscriber bcamSub = n.subscribe<task_planner_data::task_planner_data>("BottomCAMTask", 1, taskplannerCallback);
-    BottomCam camera(atoi(argv[1]),"../marker_threshold.txt","../bin_threshold.txt");
+    BottomCam camera(atoi(argv[1]),"/home/madhukar/ros_workspace/ikat-auv-packages-svn/ikat-auv-packages/ikat_bottomcam/marker_threshold.txt","../bin_threshold.txt");
     bool firstTime=true;
     currentTask = MARKER;
-    string markervideo = "../downward-pipe-15_56_17.avi";
+    string markervideo = "/home/madhukar/ros_workspace/ikat-auv-packages-svn/ikat-auv-packages/ikat_bottomcam/downward-pipe-15_56_17.avi";
     while(ros::ok())
     {
         switch(currentTask)
         {
             case MARKER:
-                    if (firstTime)
+                    if(firstTime)
                     {
-                        camera.wakeCam(markervideo);
+                        if(!camera.wakeCam(markervideo))
+                            ros::shutdown();
                         firstTime=false;
                     }
                     camera.markerDetect();
