@@ -22,9 +22,9 @@ set(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/lib)
 #rosbuild_gensrv()
 
 #common commands for building c++ executables and libraries
-#rosbuild_add_library(${PROJECT_NAME} src/Tasks.cpp)
+rosbuild_add_library(TASKS_PARAM src/TASKS_PARAM.cpp)
 #target_link_libraries(${PROJECT_NAME} another_library)
 #rosbuild_add_boost_directories()
 #rosbuild_link_boost(${PROJECT_NAME} thread)
 rosbuild_add_executable(task_planner src/task_planner.cpp)
-#target_link_libraries(example ${PROJECT_NAME})
+target_link_libraries(task_planner TASKS_PARAM )
