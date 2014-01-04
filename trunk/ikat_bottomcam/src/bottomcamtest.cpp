@@ -26,6 +26,7 @@ int main(int argc, char ** argv)
     BottomCam camera(atoi(argv[1]),"../marker_threshold.txt","../bin_threshold.txt");
     bool firstTime=true;
     currentTask = MARKER;
+    string markervideo = "../downward-pipe-15_56_17.avi";
     while(ros::ok())
     {
         switch(currentTask)
@@ -33,7 +34,7 @@ int main(int argc, char ** argv)
             case MARKER:
                     if (firstTime)
                     {
-                        camera.wakeCam();
+                        camera.wakeCam(markervideo);
                         firstTime=false;
                     }
                     camera.markerDetect();
@@ -51,10 +52,14 @@ int main(int argc, char ** argv)
                     firstTime=true;
                     break;
         }
-
-        imshow("Bottom CAM", camera.I);
-        if(waitKey(200) == 27)
-            break;
+        if(camera.I.empty())
+            cout << "Image is not there" << endl;
+        else
+        {
+            imshow("Bottom CAM", camera.I);
+            if(waitKey(200) == 27)
+                break;
+        }
     }
 
 }
