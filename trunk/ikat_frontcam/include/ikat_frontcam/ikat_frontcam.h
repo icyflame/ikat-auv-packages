@@ -20,7 +20,7 @@ private:
     NodeHandle n;
     Publisher buoy_Data, valid_data, torpid_data;
     // Common Variables used by all the functions 
-    Mat I, Ihsv, Ithresh;
+    Mat Ihsv, Ithresh;
     CBlobResult blobs;
     CBlob * currentBlob;
     vector<vector<Point> > contours;
@@ -31,11 +31,13 @@ private:
     int prev_error_x;
     int prev_error_y;
 public:
+    Mat I;
     FrontCam(int deviceId, const string &, const string &, const string &);
     void sleepCam();
     void buoyDetect();
     void validationGate();
     void torpedoShoot();
-    void wakeCam();
+    bool wakeCam();
+    bool wakeCam(const string &);
     ~FrontCam();
 };

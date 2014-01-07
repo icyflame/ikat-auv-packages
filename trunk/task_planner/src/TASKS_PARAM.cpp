@@ -8,7 +8,7 @@ using namespace std;
 void TASKS_PARAM::readFromFile(){
 	float value;
 	string buff;
-	char filename[] = "../TASKS_PARAM.txt";
+        char filename[] = "/home/ikat/ros_workspace/ikat-auv-packages/task_planner/TASKS_PARAM.txt";
 	ifstream stream(filename);
 	if(!stream){
 		cout<<"Error reading input file ! \n";
@@ -22,37 +22,55 @@ void TASKS_PARAM::readFromFile(){
 					case 1:
 					INTERVAL_VEHICLE_START = value;break;
 					case 2:
-					INTERVAL_FOLLOWING_MARKER = value;break;
+                                        MARKER_ANGLE_THRESHOLD = value;break;
 					case 3:
-					INTERVAL_MARKER_LOCKED = value;break;
+                                        INTERVAL_MARKER_FOLLOWING = value;break;
 					case 4:
 					INTERVAL_GOING_DOWN = value;break;
 					case 5:
-					INTERVAL_BUOY_AREA = value;break;
+                                        BUOY_AREA_THRESHOLD = value;break;
 					case 6:
-					INTERVAL_BUOY_ANGLE = value;break;
+                                        INTERVAL_BUOY_HIT = value;break;
 					case 7:
 					INTERVAL_BUOY_RETREATING = value;break;
 					case 8:
 					INTERVAL_RISE_UP = value;break;
 					case 9:
-					START = value;break;
+                                        _START = value;
+                                        _map[_START] = (char)START;
+                                        break;
 					case 10:
-					MARKER = value;break;
+                                        //_MARKER = value;
+                                        _map[_MARKER] = (char)MARKER;
+                                        break;
 					case 11:
-					GO_DOWN = value;break;
+                                        _GO_DOWN = value;
+                                        _map[_GO_DOWN] = (char)GO_DOWN;
+                                        break;
 					case 12:
-					FOLLOW_MARKER = value;break;
+                                        _FOLLOW_MARKER = value;
+                                        _map[_FOLLOW_MARKER] = (char)FOLLOW_MARKER;
+                                        break;
 					case 13:
-					GO_FORWARD = value;break;
+                                        _GO_FORWARD = value;
+                                        _map[_GO_FORWARD] = (char)GO_FORWARD;
+                                        break;
 					case 14:
-					BUOY = value;break;
+                                        _BUOY = value;
+                                        _map[_BUOY] = (char)BUOY;
+                                        break;
 					case 15:
-					GO_BACK = value;break;
+                                        _GO_BACK = value;
+                                        _map[_GO_BACK] = (char)GO_BACK;
+                                        break;
 					case 16:
-					GO_UP = value;break;
+                                        _GO_UP = value;
+                                        _map[_GO_UP] = (char)GO_UP;
+                                        break;
 					case 17:
-					BIN = value;break;
+                                        _BIN = value;
+                                        _map[_BIN] = (char)BIN;
+                                        break;
 				}
 			}
 		}
@@ -64,15 +82,15 @@ void TASKS_PARAM::readFromFile(){
 
 void TASKS_PARAM::printVar(){
 	cout<<"INTERVAL_VEHICLE_START - "<<INTERVAL_VEHICLE_START<<endl;
-	cout<<"INTERVAL_FOLLOWING_MARKER - "<<INTERVAL_FOLLOWING_MARKER<<endl;
-	cout<<"INTERVAL_MARKER_LOCKED - "<<INTERVAL_MARKER_LOCKED<<endl;
+        cout<<"MARKER_ANGLE_THRESHOLD - "<<MARKER_ANGLE_THRESHOLD<<endl;
+        cout<<"INTERVAL_MARKER_FOLLOWING - "<<INTERVAL_MARKER_FOLLOWING<<endl;
 	cout<<"INTERVAL_GOING_DOWN - "<<INTERVAL_GOING_DOWN<<endl;
-	cout<<"INTERVAL_BUOY_AREA - "<<INTERVAL_BUOY_AREA<<endl;
-	cout<<"INTERVAL_BUOY_ANGLE - "<<INTERVAL_BUOY_ANGLE<<endl;
+        cout<<"BUOY_AREA_THRESHOLD - "<<BUOY_AREA_THRESHOLD<<endl;
+        cout<<"INTERVAL_BUOY_HIT- "<<INTERVAL_BUOY_HIT<<endl;
 	cout<<"INTERVAL_BUOY_RETREATING - "<<INTERVAL_BUOY_RETREATING<<endl;
 	cout<<"INTERVAL_RISE_UP - "<<INTERVAL_RISE_UP<<endl;
 	cout<<endl;
-	cout<<"START - "<<START<<endl;
+        /*cout<<"START - "<<START<<endl;
 	cout<<"MARKER - "<<MARKER<<endl;
 	cout<<"GO_DOWN - "<<GO_DOWN<<endl;
 	cout<<"FOLLOW_MARKER - "<<FOLLOW_MARKER<<endl;
@@ -80,5 +98,5 @@ void TASKS_PARAM::printVar(){
 	cout<<"BUOY - "<<BUOY<<endl;
 	cout<<"GO_BACK - "<<GO_BACK<<endl;
 	cout<<"GO_UP - "<<GO_UP<<endl;
-	cout<<"BIN - "<<BIN<<endl;
+        cout<<"BIN - "<<BIN<<endl;*/
 }

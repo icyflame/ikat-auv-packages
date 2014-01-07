@@ -8,19 +8,7 @@ using namespace std;
 
 FrontCam::FrontCam(int deviceIdno, const string &buoyThresh, const string &torpedoThresh, const string &vgateThresh)
 {
-    if(frontcamera.open(deviceIdno))
-    {
-        cout << "The camera is opened Successfully" << endl;
-        deviceId = deviceIdno;
-        frontcamera.set(CV_CAP_PROP_FRAME_WIDTH,640);
-        frontcamera.set(CV_CAP_PROP_FRAME_HEIGHT,480);
-        frontcamera.set(CV_CAP_PROP_FPS,5);
-    }
-    else
-    {
-        cout << "The camera did not started successfully" << endl;
-        ros::shutdown();
-    }
+	deviceId=deviceIdno;
     ifstream fileBT(buoyThresh.c_str());
     ifstream fileMT(torpedoThresh.c_str());
     ifstream fileVT(vgateThresh.c_str());
@@ -42,19 +30,48 @@ FrontCam::FrontCam(int deviceIdno, const string &buoyThresh, const string &torpe
 
 void FrontCam::sleepCam()
 {
+    destroyAllWindows();
     frontcamera.release();
+    I.~Mat();
 }
 
-void FrontCam::wakeCam()
+bool FrontCam::wakeCam()
 {
-    if(!frontcamera.open(deviceId))
+    if(frontcamera.open(deviceId))
     {
-        cout << "The camera was not opened successfully" << endl;
+        cout << "The camera is opened Successfully" << endl;
+        frontcamera.set(CV_CAP_PROP_FRAME_WIDTH,640);
+        frontcamera.set(CV_CAP_PROP_FRAME_HEIGHT,480);
+        frontcamera.set(CV_CAP_PROP_FPS,5);
+        return true;
+    }
+    else
+    {
+        cout << "The camera did not started successfully" << endl;
+        return false;
+    }
+}
+
+bool FrontCam::wakeCam(const string &fileName)
+{
+    if(frontcamera.open(fileName.c_str()))
+    {
+        cout << "The camera is opened Successfully" << endl;
+        frontcamera.set(CV_CAP_PROP_FRAME_WIDTH,640);
+        frontcamera.set(CV_CAP_PROP_FRAME_HEIGHT,480);
+        frontcamera.set(CV_CAP_PROP_FPS,5);
+        return true;
+    }
+    else
+    {
+        cout << "The camera did not started successfully" << endl;
+        return false;
     }
 }
 
 void FrontCam::buoyDetect()
 {
+    contours.clear();
     ikat_ip_data::ip_buoy_data data;
     Point2f prev_center_final;
     Scalar threshmin(thresholdValBuoy[0],thresholdValBuoy[1],thresholdValBuoy[2]), threshmax(thresholdValBuoy[3],thresholdValBuoy[4],thresholdValBuoy[5]);
@@ -69,6 +86,7 @@ void FrontCam::buoyDetect()
     frontcamera >> I;
     cvtColor(I, Ihsv,CV_RGB2HSV_FULL);
     inRange(Ihsv, threshmin, threshmax, Ithresh);
+    imshow("Thresholded image",Ithresh);
     GaussianBlur(Ithresh, Ithresh, Size(11,11), 0, 0);
     medianBlur(Ithresh,Ithresh,9);
     IplImage Ithreshipl = Ithresh;
@@ -81,6 +99,7 @@ void FrontCam::buoyDetect()
         currentBlob->FillBlob(&Ithreshipl,Scalar(255));
     }
     Mat Ifiltered(&Ithreshipl);
+    //imshow("filtered", Ifiltered);
     // Finding those contour which resemble cicle
     findContours(Ifiltered, contours, hierarchy, CV_RETR_TREE, CV_CHAIN_APPROX_SIMPLE, Point(0, 0));
     for(int i = 0; i< contours.size(); i++ )
@@ -90,29 +109,38 @@ void FrontCam::buoyDetect()
             approxPolyDP( Mat(contours[i]), approx_poly_temp, 3, true );
             minEnclosingCircle((Mat)approx_poly_temp, center_temp, radius_temp );
             circleArea = 3.14*radius_temp*radius_temp;
-            if(contourArea(contours[i]) > 0.55*circleArea)
+            if (data.Buoy_area>0.15)
             {
                 center.push_back(center_temp);
                 contours_poly.push_back(approx_poly_temp);
             }
+            else
+            {
+                if(contourArea(contours[i]) > 0.4*circleArea)
+                {
+                    center.push_back(center_temp);
+                    contours_poly.push_back(approx_poly_temp);
+                }
+            }
+
         }
     }    
     if (center.size())
     {
         //displaying all probable things
-        if (center.size()==1 && !first_time)
+        /*if (center.size()==1 && !first_time)
         {
             center_final= center[0];
             contours_poly_final= contours_poly[0];
             contourdetected = true;
             prev_center_final=center_final;
-        }
-        else
+        }*/
+        //else
         {
             //finding the contour whose center is bottom most
             for(int i=0; i< center.size(); i++)
             {
-                if ((center_final.y<=center[i].y && !first_time) || (first_time && abs(center[i].y-prev_center_final.y)<200 && abs(center[i].x-prev_center_final.x)<400))
+                if ((center_final.y<=center[i].y) || ( abs(center[i].y-prev_center_final.y)<200 && abs(center[i].x-prev_center_final.x)<400))
                 {
                     center_final=center[i];
                     //can be commented in final code
@@ -136,13 +164,16 @@ void FrontCam::buoyDetect()
         minEnclosingCircle((Mat)contours_poly_final, center_final, radius_temp );
         circle(I,center_final,radius_temp,Scalar(255, 255, 255),5);
 
-        data.Buoy_Center_data[0] = -((float)center_final.x - I.size().width/2);
-        data.Buoy_Center_data[1] = -((float)center_final.y - I.size().height/2);
+        data.Buoy_Center_data[0] = -((float)center_final.x - I.rows/2);
+        data.Buoy_Center_data[1] = -((float)center_final.y - I.cols/2);
         prev_error_x = data.Buoy_Center_data[0];
         prev_error_y = data.Buoy_Center_data[1];
         data.Buoy_area=contourArea(contours_poly_final)/(I.rows*I.cols);
     }
-    imshow("Front Camera", I);
-    waitKey(200);
     buoy_Data.publish(data);
+}
+
+FrontCam::~FrontCam()
+{
+    frontcamera.release();
 }
