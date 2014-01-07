@@ -1,5 +1,4 @@
 #include <ikat_controller/ImageController.h>
-#include <task_planner/Tasks.h>
 
 ImageController::ImageController()
 {
@@ -14,13 +13,14 @@ ImageController::ImageController()
     prev_error_yaw = 0;
     prev_error_depth = 0;
     horizontal_speed = 3;
+    TASKS.readFromFile();
 }
 void ImageController::setControlParamters(char choice)
 {
     switch(choice)
     {
         case BUOY:
-            KP_YAW = 0.004;
+            KP_YAW = 0.002;
             KI_YAW = 0;
             KD_YAW = 0.001;
             KP_DEPTH = 0.007;
@@ -58,7 +58,6 @@ void ImageController::setControlParamters(char choice)
             prev_error_depth = 0;
             horizontal_speed = 0;
             break;
-
     }
 }
 
@@ -109,17 +108,17 @@ void ImageController::speedCallibration(void)
 
 void ImageController::reset()
 {
-    KP_YAW = 0.004;
+    KP_YAW = 0.000;
     KI_YAW = 0;
-    KD_YAW = 0.004;
-    KP_DEPTH = 0.005;
+    KD_YAW = 0.000;
+    KP_DEPTH = 0.000;
     KI_DEPTH = 0;
-    KD_DEPTH = 0.02;
+    KD_DEPTH = 0.00;
     sum_yaw = 0;
     sum_depth = 0;
     prev_error_yaw = 0;
     prev_error_depth = 0;
-    horizontal_speed = 2.5;
+    horizontal_speed = 0;
 }
 
 float ImageController::depthController(float error_depth_image)

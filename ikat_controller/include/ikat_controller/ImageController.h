@@ -1,5 +1,5 @@
 #include <ikat_thrusters/Thrusters.hpp>
-
+#include <task_planner/TASKS_PARAM.h>
 class ImageController
 {
 private:
@@ -11,6 +11,7 @@ private:
     float steady_depth;
     float KP_DEPTH,KI_DEPTH,KD_DEPTH,error_depth,sum_depth,prev_error_depth,diff_depth;
     float verticalspeed;
+    class TASKS_PARAM TASKS;
 public:
     ImageController();
     float theta_relative;
@@ -18,7 +19,7 @@ public:
     void get_Data(float *);
     void yawController(float,float *);
     void speedCallibration(void);
-	void setControlParamters(char);
+    void setControlParamters(char);
     void reset();
     float depthController(float);
 };
