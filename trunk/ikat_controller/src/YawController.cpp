@@ -3,7 +3,7 @@ YawController::YawController(void)
 {
     roll_mt9=0,pitch_mt9=0, yaw_mt9=0;
     steady_angle =0;
-    KP_YAW=0.14,KI_YAW=0.00,KD_YAW=.1,error_yaw=0,sum_yaw=0,prev_error_yaw=0.0,diff_yaw=0.0;
+    KP_YAW=0.02,KI_YAW=0.00,KD_YAW=.02,error_yaw=0,sum_yaw=0,prev_error_yaw=0.0,diff_yaw=0.0;
     theta_relative=0;
     no_of_times_from_begining_for_mt9=0;
     horizontal_speed=0,differential_surge_speed=0,thruster_surge_left=0,thruster_surge_right=0;

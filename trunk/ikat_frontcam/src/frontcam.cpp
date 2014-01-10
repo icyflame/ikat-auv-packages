@@ -62,7 +62,7 @@ int main(int argc, char ** argv)
             imshow("front CAM", camera.I);
         }
 
-        if(waitKey(33) == 27)
+        if(waitKey(200) == 27)
             break;
     }
 

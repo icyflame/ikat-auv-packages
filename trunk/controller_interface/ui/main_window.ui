@@ -450,6 +450,9 @@
                    <height>25</height>
                   </size>
                  </property>
+                 <property name="decimals">
+                  <number>5</number>
+                 </property>
                 </widget>
                </item>
                <item row="1" column="0">
@@ -487,6 +490,9 @@
                    <width>100</width>
                    <height>25</height>
                   </size>
+                 </property>
+                 <property name="decimals">
+                  <number>5</number>
                  </property>
                 </widget>
                </item>
@@ -671,6 +677,9 @@
                    <height>25</height>
                   </size>
                  </property>
+                 <property name="decimals">
+                  <number>5</number>
+                 </property>
                 </widget>
                </item>
               </layout>
@@ -788,6 +797,9 @@
                      <height>25</height>
                     </size>
                    </property>
+                   <property name="decimals">
+                    <number>5</number>
+                   </property>
                   </widget>
                  </item>
                  <item row="4" column="0">
@@ -825,6 +837,9 @@
                      <width>100</width>
                      <height>25</height>
                     </size>
+                   </property>
+                   <property name="decimals">
+                    <number>5</number>
                    </property>
                   </widget>
                  </item>
@@ -920,6 +935,9 @@
                      <width>100</width>
                      <height>25</height>
                     </size>
+                   </property>
+                   <property name="decimals">
+                    <number>5</number>
                    </property>
                   </widget>
                  </item>
@@ -1056,6 +1074,9 @@
                    <width>100</width>
                    <height>25</height>
                   </size>
+                 </property>
+                 <property name="decimals">
+                  <number>5</number>
                  </property>
                 </widget>
                </item>
@@ -1259,6 +1280,9 @@
                    <height>25</height>
                   </size>
                  </property>
+                 <property name="decimals">
+                  <number>5</number>
+                 </property>
                 </widget>
                </item>
                <item row="1" column="1">
@@ -1274,6 +1298,9 @@
                    <width>100</width>
                    <height>25</height>
                   </size>
+                 </property>
+                 <property name="decimals">
+                  <number>5</number>
                  </property>
                 </widget>
                </item>

@@ -6,6 +6,8 @@
 #include <unistd.h>
 #include <ikat_sensor_data/mt9_sensor_data.h>
 #include <boost/thread.hpp>
+#include <tf/tf.h>
+#include <mt9_sensor/MadgwickAHRS.h>
 namespace ikat_sensor
 {
 

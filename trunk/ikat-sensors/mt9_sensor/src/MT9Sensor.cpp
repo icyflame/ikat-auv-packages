@@ -32,14 +32,14 @@ inline bool MT9Sensor::setPortName(std::string name)
 
 bool MT9Sensor::setupFilter()
 {
-    short bLogCalibratedData = 0;
+    short bLogCalibratedData = 1;
     float fGain = 1.0f;
     short nCorInterval = 1;
     float fRho = 1.0f;
     short nMode = MT_LOGEULER;
     short nSampleFrequency = 100;
     ROS_INFO("Loading MotionTracker library...");
-    module = dlopen("/home/vinay/ros_workspace/ikat-auv-packages/ikat-sensors/mt9_sensor/lib/libmtobject.so",RTLD_LAZY);
+    module = dlopen("libmtobject.so",RTLD_NOW);
     if (!module)
     {
         ROS_ERROR("Couldn't open MotionTracker library: %s\n", dlerror());
@@ -106,8 +106,11 @@ bool MT9Sensor::getData(ikat_sensor_data::mt9_sensor_data &dataptr)
         boost::recursive_mutex::scoped_lock lock(mutex_);
         short nNew = 0;
         short nRetval = 0;
-        pMT->MT_GetOrientationData(&nNew,fOrientationData,0);
+        //pMT->MT_GetOrientationData(&nNew,fOrientationData,0);
+        pMT->MT_GetCalibratedData(&nNew,fOrientationData,0);
         float *data = dataptr.MT9_data.c_array();
+        float quaternion[4];
+        
         nRetval = nNew;
         switch(nNew)
         {
@@ -117,6 +120,38 @@ bool MT9Sensor::getData(ikat_sensor_data::mt9_sensor_data &dataptr)
                 {
                     data[i]=fOrientationData[i];
                 }
+                MadgwickAHRSupdateNew(fOrientationData,quaternion);
+                if(fOrientationData[7]>0)
+                {
+                    data[2] = 90-atan2(fOrientationData[6],fOrientationData[7])*180/3.14;
+                }
+                else
+                {
+                    if(fOrientationData[7]<0)
+                    {
+                        data[2] = (270-atan2(fOrientationData[6],fOrientationData[7])*180/3.14);
+                        data[2] = data[2]-floor(data[2]/360)*360-180;
+                    }
+                    else
+                    {
+                        if(fOrientationData[7]==0&&fOrientationData[6]<0)
+                        {
+                            data[2] = 180;
+                        }
+                        else
+                        {
+                            //if(fOrientationData[7]==0&&fOrientationData[6]>0)
+                            {
+                                data[2] = 0;
+                            }
+                        }
+                    }
+                }
+                data[2]=-data[2];        
+                //data[0] = 180/3.14*atan2(2*(quaternion[0]*quaternion[1]+quaternion[2]*quaternion[3]),1-2*(quaternion[2]*quaternion[2]+quaternion[1]*quaternion[1]));//roll
+                //data[1] = 180/3.14*asin(2*(quaternion[0]*quaternion[2]-quaternion[1]*quaternion[3]));//pitch
+                //data[2] = 180/3.14*atan2(2*(quaternion[0]*quaternion[3]+quaternion[2]*quaternion[1]),1-2*(quaternion[2]*quaternion[2]+quaternion[3]*quaternion[3]));//yaw
+                
                 break;
             case MT_NODATA:
                 ROS_ERROR("No Data On COM Port\n\n");

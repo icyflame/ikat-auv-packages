@@ -12,7 +12,7 @@
   <depend package="std_msgs"/>
   <depend package="task_planner_data"/>
   <export>
-    <cpp cflags="-I${prefix}/include" lflags="-L${prefix}/lib"/>
+    <cpp cflags="-I${prefix}/include" lflags="-Wl,-rpath,${prefix}/lib -L${prefix}/lib -lTASKS_PARAM"/>
   </export>
 
 </package>

@@ -10,6 +10,7 @@
   <url>http://ros.org/wiki/mt9_sensor</url>
   <depend package="roscpp"/>
   <depend package="ikat_sensor_data"/>
+  <depend package="tf"/>
 
 </package>
 
