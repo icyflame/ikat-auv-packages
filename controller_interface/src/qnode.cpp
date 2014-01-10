@@ -70,7 +70,7 @@ bool QNode::init() {
 
 
 void QNode::run() {
-        ros::Rate loop_rate(20);
+    ros::Rate loop_rate(5);
     float buff[2];
     int count=0;
 	while ( ros::ok() ) 
@@ -180,7 +180,7 @@ float QNode::depthController()
         sum_depth=sum_depth+error_depth;
         diff_depth = error_depth - prev_error_depth;
         prev_error_depth = error_depth;
-        return (KP_DEPTH*error_depth+KI_DEPTH*sum_depth+KD_DEPTH*diff_depth+3);
+        return (KP_DEPTH*error_depth+KI_DEPTH*sum_depth+KD_DEPTH*diff_depth+4.1);
     }
     else
     {

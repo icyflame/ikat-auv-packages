@@ -58,7 +58,7 @@ int main(int argc, char **argv)
         loopRate.sleep();
     }
 
-
+    
     cout<<"LOCKING MARKER"<<endl;
     choice.task_choice = MARKER;
     tasksPub.publish(choice);

@@ -12,7 +12,7 @@ ImageController::ImageController()
     sum_depth = 0;
     prev_error_yaw = 0;
     prev_error_depth = 0;
-    horizontal_speed = 3;
+    horizontal_speed = 0;
     TASKS.readFromFile();
 }
 void ImageController::setControlParamters(char choice)
@@ -25,7 +25,7 @@ void ImageController::setControlParamters(char choice)
             KD_YAW = 0.001;
             KP_DEPTH = 0.007;
             KI_DEPTH = 0;
-            KD_DEPTH = 0.03;
+            KD_DEPTH = 0.0;
             sum_yaw = 0;
             sum_depth = 0;
             prev_error_yaw = 0;
@@ -123,11 +123,21 @@ void ImageController::reset()
 
 float ImageController::depthController(float error_depth_image)
 {
-    error_depth=error_depth_image;
-    diff_depth = error_depth-prev_error_depth;
+//    error_depth=error_depth_image;
+//    diff_depth = error_depth-prev_error_depth;
+//    prev_error_depth = error_depth;
+//    sum_depth+=error_depth;
+//    verticalspeed=KP_DEPTH*error_depth+KI_DEPTH*sum_depth+KD_DEPTH*prev_error_depth+4.1;
+//    //std::cout<<"Error Image Depth : "<<error_depth<<std::endl;
+    
+//    steady_depth=error_depth_image;    
+        
+    error_depth=-error_depth_image;
+    sum_depth=sum_depth+error_depth;
+    diff_depth = error_depth - prev_error_depth;
     prev_error_depth = error_depth;
-    sum_depth+=error_depth;
-    verticalspeed=KP_DEPTH*error_depth+KI_DEPTH*sum_depth+KD_DEPTH*prev_error_depth+3;
-    //std::cout<<"Error Image Depth : "<<error_depth<<std::endl;
-    return -verticalspeed;
+    return (KP_DEPTH*error_depth+KI_DEPTH*sum_depth+KD_DEPTH*diff_depth+4.1);
+    
+    
+    //return -verticalspeed;
 }
