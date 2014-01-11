@@ -8,14 +8,15 @@ using namespace std;
 
 FrontCam::FrontCam(int deviceIdno, const string &buoyThresh, const string &torpedoThresh, const string &vgateThresh)
 {
+	deviceId=deviceIdno;
     ifstream fileBT(buoyThresh.c_str());
     ifstream fileMT(torpedoThresh.c_str());
     ifstream fileVT(vgateThresh.c_str());
     for(int i = 0; i < 6; i++)
     {
         fileBT >> thresholdValBuoy[i];
-        fileMT >> thresholdValVgate[i];
-        fileVT >> thresholdValTshoot[i];
+        fileMT >> thresholdValTshoot[i];
+        fileVT >> thresholdValVgate[i];
     }
     buoy_Data =  n.advertise<ikat_ip_data::ip_buoy_data>("BuoyData",1);
     //valid_data
@@ -98,7 +99,7 @@ void FrontCam::buoyDetect()
         currentBlob->FillBlob(&Ithreshipl,Scalar(255));
     }
     Mat Ifiltered(&Ithreshipl);
-    imshow("filtered", Ifiltered);
+    //imshow("filtered", Ifiltered);
     // Finding those contour which resemble cicle
     findContours(Ifiltered, contours, hierarchy, CV_RETR_TREE, CV_CHAIN_APPROX_SIMPLE, Point(0, 0));
     for(int i = 0; i< contours.size(); i++ )
@@ -115,7 +116,7 @@ void FrontCam::buoyDetect()
             }
             else
             {
-                if(contourArea(contours[i]) > 0.55*circleArea)
+                if(contourArea(contours[i]) > 0.4*circleArea)
                 {
                     center.push_back(center_temp);
                     contours_poly.push_back(approx_poly_temp);
@@ -170,6 +171,90 @@ void FrontCam::buoyDetect()
         data.Buoy_area=contourArea(contours_poly_final)/(I.rows*I.cols);
     }
     buoy_Data.publish(data);
+}
+
+void FrontCam::validationGate()
+{
+    frontcamera >> I;
+    cvtColor(I, Ihsv, CV_RGB2HSV);
+    Scalar threshmin(thresholdValVgate[0], thresholdValVgate[1], thresholdValVgate[2]), threshmax(thresholdValVgate[3], thresholdValVgate[4], thresholdValVgate[5]);
+    inRange(Ihsv, threshmin, threshmax, Ithresh);
+    medianBlur(Ithresh, Ithresh, 5);
+    imshow("Thresholded Image", Ithresh);
+    Canny(Ithresh, Ithresh, 50, 200);
+    HoughLinesP(Ithresh, lines, 1, CV_PI/180, 100, 75, 40);
+
+    Point2i coordinate[4], rodB;
+
+    for( int i = 0; i < lines.size(); i++ )
+    {
+
+        line(I, Point2i(lines[i][0], lines[i][1]), Point2i(lines[i][2], lines[i][3]), Scalar(255,255,0),3,8);
+        if(i==0)
+        {
+//            coordinate[0].x = lines[i][0];			//taking min x
+//            coordinate[1].y = lines[i][1];			//taking min y
+//            coordinate[2].x = lines[i][2];			//taking max x
+//            coordinate[3].y = lines[i][3];			//taking max y
+            coordinate[0].x = lines[i][0];			//taking min x
+            coordinate[0].y = lines[i][1];			//taking y corresponding to min x
+            coordinate[1].x = lines[i][2];			//taking max x
+            coordinate[1].y = lines[i][3];			//taking y corresponding to max x
+            coordinate[2].x = lines[i][0];          //taking x corresponding to min y
+            coordinate[2].y = lines[i][1];          //taking min y
+            coordinate[3].x = lines[i][2];          //taking x corresponding to max y
+            coordinate[3].y = lines[i][3];          //taking max y
+        }
+        else
+        {
+            if(lines[i][0] < coordinate[0].x)
+            {
+                coordinate[0].x = lines[i][0];
+                coordinate[0].y = lines[i][1];
+            }
+            if(lines[i][2] > coordinate[1].x)
+            {
+                coordinate[1].x = lines[i][2];
+                coordinate[1].y = lines[i][3];
+            }
+            if(lines[i][0] > coordinate[1].x)
+            {
+                coordinate[1].x = lines[i][0];
+                coordinate[1].y = lines[i][1];
+            }
+            if(lines[i][2] < coordinate[0].x)
+            {
+                coordinate[0].x = lines[i][2];
+                coordinate[0].y = lines[i][3];
+            }
+            if(lines[i][1] < coordinate[2].y)
+            {
+                coordinate[2].x = lines[i][0];
+                coordinate[2].y = lines[i][1];
+            }
+            if(lines[i][3] > coordinate[3].y)
+            {
+                coordinate[3].x = lines[i][2];
+                coordinate[3].y = lines[i][3];
+            }
+            if(lines[i][1] > coordinate[3].y)
+            {
+                coordinate[3].x = lines[i][0];
+                coordinate[3].y = lines[i][1];
+            }
+            if(lines[i][3] < coordinate[2].y)
+            {
+                coordinate[2].x = lines[i][2];
+                coordinate[2].y = lines[i][3];
+            }
+        }
+    }
+    line(I, coordinate[0], coordinate[2], Scalar(255,0,0),3,8);
+    rodB.x=(coordinate[0].x + coordinate[2].x)/2;
+    rodB.y=(coordinate[0].y + coordinate[2].y)/2;
+    std::cout << rodB.x << "\t" << rodB.y << "\t" << I.rows/2 << "\t" << I.cols/2 << "\t" << std::endl;
+    //error.errorx = I.rows/2 - rodB.x;
+    //error.errory = I.cols/2 - rodB.y;
 }
 
 FrontCam::~FrontCam()

@@ -4,8 +4,10 @@
 #include <opencv/highgui.h>
 #include <ikat_ip_data/ip_buoy_data.h>
 #include <blob/BlobResult.h>
+#include <vector>
 
 using namespace cv;
+using namespace std;
 using namespace ros;
 
 class FrontCam
@@ -30,6 +32,8 @@ private:
     bool first_time;
     int prev_error_x;
     int prev_error_y;
+    //Validation Gate Specific
+    vector<Vec4i> lines;
 public:
     Mat I;
     FrontCam(int deviceId, const string &, const string &, const string &);
