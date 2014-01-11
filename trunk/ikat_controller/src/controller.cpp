@@ -113,13 +113,14 @@ int main(int argc, char **argv)
       ros::Subscriber marker_callback = n.subscribe("markerData",10,markerDetectCallback);
       ros::Publisher thrusterPub = p.advertise<ikat_sensor_data::thruster_data>("thrusterControlData",3);
       ros::Publisher taskPlannerPub = p.advertise<task_planner_data::controller_data>("controller_data",3);
-      ros::Rate loopRate(5);
+      ros::Rate loopRate(10);
       ikat_sensor_data::thruster_data thrusterData;
       task_planner_data::controller_data controllerData;
       class TASKS_PARAM TASKS;
       TASKS.readFromFile();
       float * buff = new float[2];
       int i=0;
+      //delay
       while(ros::ok())
       { 
           i++;
@@ -128,6 +129,7 @@ int main(int argc, char **argv)
           ros::spinOnce();
           loopRate.sleep();
       }
+
       float prev_task_yaw=180,prev_task_depth=0;
       while(ros::ok())
       {
@@ -141,13 +143,14 @@ int main(int argc, char **argv)
         {
             case START:
                     thrusterData.heaveThrust= 0;//depthobj.depthController(0.0);
+                    yawobj.horizontal_speed=0;
                     yawobj.yawController(180,buff);
                     thrusterData.surgeLeft=0;//buff[0];
                     thrusterData.surgeRight=0;//buff[1];
                     thrusterPub.publish(thrusterData);
-                    cout<<"going down"<<endl;
                     break;
             case MARKER:
+                    imageControllerObj.horizontal_speed=2;
                     imageControllerObj.yawController(angle_marker,buff);
                     thrusterData.heaveThrust= depthobj.depthController(0.0);
                     thrusterData.surgeLeft = buff[0];
@@ -159,26 +162,26 @@ int main(int argc, char **argv)
                     taskPlannerPub.publish(controllerData);
                     prev_task_yaw=mt9_data[2];
                     prev_task_depth=depth_sensor_data;
-                    cout<<"MARKER"<<endl;
                     break;
             case GO_FORWARD:
                     thrusterData.heaveThrust= depthobj.depthController(prev_task_depth);
+                    yawobj.horizontal_speed=2;
                     yawobj.yawController(prev_task_yaw,buff);
-                    thrusterData.surgeLeft=buff[0]+2;
-                    thrusterData.surgeRight=buff[1]+2;
+                    thrusterData.surgeLeft=buff[0];
+                    thrusterData.surgeRight=buff[1];
                     thrusterPub.publish(thrusterData);
-                    cout<<"going forwrd"<<endl;
                     break;
             case GO_DOWN:
                     thrusterData.heaveThrust= depthobj.depthController(0.4);
+                    yawobj.horizontal_speed=0;
                     yawobj.yawController(prev_task_yaw,buff);
                     thrusterData.surgeLeft=buff[0];
                     thrusterData.surgeRight=buff[1];
                     thrusterPub.publish(thrusterData);
                     prev_task_depth=0.4;
-                    cout<<"going down"<<thrusterData.heaveThrust<<endl;
                     break;
             case BUOY:
+                    imageControllerObj.horizontal_speed=0;
                     imageControllerObj.yawController(x_buoy,buff);
                     thrusterData.heaveThrust= imageControllerObj.depthController(y_buoy);
                     thrusterData.surgeLeft = buff[0];
@@ -188,26 +191,24 @@ int main(int argc, char **argv)
                     controllerData.param[1]=mt9_data[2];
                     controllerData.param[2]=depth_sensor_data;
                     taskPlannerPub.publish(controllerData);
-                    ros::spinOnce();
                     prev_task_yaw=mt9_data[2];
                     prev_task_depth=depth_sensor_data;
-                    cout<<"buoy"<<endl;
                     break;
             case GO_BACK:
                     thrusterData.heaveThrust= depthobj.depthController(prev_task_depth);
-                    yawobj.yawController(prev_task_yaw,buff);
-                    thrusterData.surgeLeft=buff[0]-3;
-                    thrusterData.surgeRight=buff[1]-3;
-                    thrusterPub.publish(thrusterData);
-                    cout<<"going back"<<endl;
-                    break;
-            case GO_UP:
-                    thrusterData.heaveThrust= depthobj.depthController(0.05);
+                    yawobj.horizontal_speed=-4;
                     yawobj.yawController(prev_task_yaw,buff);
                     thrusterData.surgeLeft=buff[0];
                     thrusterData.surgeRight=buff[1];
                     thrusterPub.publish(thrusterData);
-                    cout<<"going up"<<endl;
+                    break;
+            case GO_UP:
+                    thrusterData.heaveThrust= depthobj.depthController(0.05);
+                    yawobj.horizontal_speed=0;
+                    yawobj.yawController(prev_task_yaw,buff);
+                    thrusterData.surgeLeft=buff[0];
+                    thrusterData.surgeRight=buff[1];
+                    thrusterPub.publish(thrusterData);
                     break;
             default:
                     thrusterData.heaveThrust= 0;
@@ -227,3 +228,8 @@ int main(int argc, char **argv)
       delete(buff);
       return 0;
 }
+//area ratio
+//depth
+//bounding box
+//y coordinate less than half
+//

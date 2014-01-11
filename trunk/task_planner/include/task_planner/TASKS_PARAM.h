@@ -10,19 +10,25 @@ using namespace std;
 #define GO_BACK 104
 #define GO_UP 105
 #define BIN 106
+#define VGATE 107
 #define SMALL_SLEEP 1
 #include <map>
 
 class TASKS_PARAM{
 public:
 	float INTERVAL_VEHICLE_START;
-        float MARKER_ANGLE_THRESHOLD;
-        float INTERVAL_MARKER_FOLLOWING;
+    float MARKER_ANGLE_THRESHOLD;
+    float INTERVAL_MARKER_FOLLOWING;
 	float INTERVAL_GOING_DOWN;
-        float BUOY_AREA_THRESHOLD;
-        float INTERVAL_BUOY_HIT;
+    float BUOY_AREA_THRESHOLD;
+    float INTERVAL_BUOY_HIT;
 	float INTERVAL_BUOY_RETREATING;
 	float INTERVAL_RISE_UP;	
+    float DEPTH_RED_BUOY;
+    float DEPTH_YELLOW_BUOY;
+    float DEPTH_GREEN_BUOY;
+
+    //char TASK_SEQUENCE[50];
 
         char _START;
         char _MARKER;

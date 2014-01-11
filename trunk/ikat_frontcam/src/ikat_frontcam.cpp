@@ -8,7 +8,6 @@ using namespace std;
 
 FrontCam::FrontCam(int deviceIdno, const string &buoyThresh, const string &torpedoThresh, const string &vgateThresh)
 {
-	deviceId=deviceIdno;
     ifstream fileBT(buoyThresh.c_str());
     ifstream fileMT(torpedoThresh.c_str());
     ifstream fileVT(vgateThresh.c_str());
@@ -99,7 +98,7 @@ void FrontCam::buoyDetect()
         currentBlob->FillBlob(&Ithreshipl,Scalar(255));
     }
     Mat Ifiltered(&Ithreshipl);
-    //imshow("filtered", Ifiltered);
+    imshow("filtered", Ifiltered);
     // Finding those contour which resemble cicle
     findContours(Ifiltered, contours, hierarchy, CV_RETR_TREE, CV_CHAIN_APPROX_SIMPLE, Point(0, 0));
     for(int i = 0; i< contours.size(); i++ )
@@ -116,7 +115,7 @@ void FrontCam::buoyDetect()
             }
             else
             {
-                if(contourArea(contours[i]) > 0.4*circleArea)
+                if(contourArea(contours[i]) > 0.55*circleArea)
                 {
                     center.push_back(center_temp);
                     contours_poly.push_back(approx_poly_temp);
