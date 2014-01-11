@@ -34,31 +34,40 @@ void YawController::yawController(float setangle,float * buff)
 
 void YawController::speedCallibration(void)
 {
-    ///////////when still
+    //when still
     if(thruster_surge_left<0 && horizontal_speed==0)
     {
-            thruster_surge_left-=2.1;
+            thruster_surge_left-=2.5;
     }
-    if(thruster_surge_right<0 && horizontal_speed==0)
+    else if(thruster_surge_right<0 && horizontal_speed==0)
     {
-            thruster_surge_right-=2.1;
+            thruster_surge_right-=2.5;
     }
-    if(thruster_surge_left>0 && horizontal_speed==0)
+    else if(thruster_surge_left>0 && horizontal_speed==0)
     {
-            thruster_surge_left+=2.1;
+            thruster_surge_left+=1.25;
     }
-    if(thruster_surge_right>0 && horizontal_speed==0)
+    else if(thruster_surge_right>0 && horizontal_speed==0)
     {
-            thruster_surge_right+=2.1;
+            thruster_surge_right+=1.25;
     }
-    //////////when moving forward
-    if(thruster_surge_left<2.2 && horizontal_speed>0)
+    //when moving forward
+    else if(thruster_surge_left<2.2 && horizontal_speed>0)
     {
-            thruster_surge_left-=4.4;
+            thruster_surge_left-=5;
     }
-    if(thruster_surge_right<2.2 && horizontal_speed>0)
+    else if(thruster_surge_right<2.2 && horizontal_speed>0)
     {
-            thruster_surge_right-=4.4;
+            thruster_surge_right-=5;
+    }
+    //when moving backward
+    else if(thruster_surge_left>-2.2 && horizontal_speed<0)
+    {
+            thruster_surge_left+=4;
+    }
+    else if(thruster_surge_right>-2.2 && horizontal_speed<0)
+    {
+            thruster_surge_right+=4;
     }
 }
 

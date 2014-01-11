@@ -1,4 +1,5 @@
 #include <ikat_controller/ImageController.h>
+#include <task_planner/TASKS_PARAM.h>
 
 ImageController::ImageController()
 {
@@ -73,7 +74,6 @@ void ImageController::yawController(float error_yaw_image,float *buff)
     speedCallibration();
     buff[0]=thruster_surge_left;
     buff[1]=thruster_surge_right;
-    //std::cout<<"Error Yaw Image : "<<error_yaw<<std::endl;
 }
 
 void ImageController::speedCallibration(void)
@@ -122,22 +122,10 @@ void ImageController::reset()
 }
 
 float ImageController::depthController(float error_depth_image)
-{
-//    error_depth=error_depth_image;
-//    diff_depth = error_depth-prev_error_depth;
-//    prev_error_depth = error_depth;
-//    sum_depth+=error_depth;
-//    verticalspeed=KP_DEPTH*error_depth+KI_DEPTH*sum_depth+KD_DEPTH*prev_error_depth+4.1;
-//    //std::cout<<"Error Image Depth : "<<error_depth<<std::endl;
-    
-//    steady_depth=error_depth_image;    
-        
+{      
     error_depth=-error_depth_image;
     sum_depth=sum_depth+error_depth;
     diff_depth = error_depth - prev_error_depth;
     prev_error_depth = error_depth;
     return (KP_DEPTH*error_depth+KI_DEPTH*sum_depth+KD_DEPTH*diff_depth+4.1);
-    
-    
-    //return -verticalspeed;
 }
