@@ -2,8 +2,13 @@
 #include <fstream>
 #include <iostream>
 #include <stdlib.h>
+#include <algorithm>
 
 using namespace std;
+
+bool sortpair(const pair<int, int> &a,const pair<int, int> &b){
+    return (a.first < b.first);
+}
 
 void TASKS_PARAM::readFromFile(){
 	float value;
@@ -45,47 +50,60 @@ void TASKS_PARAM::readFromFile(){
                                         DEPTH_GREEN_BUOY = value;break;
 
                     case 12:
-                                        _START = value;
-                                        _map[_START] = (char)START;
+//                                        _START = value;
+//                                        _map[_START] = (char)START;
+                                        schedule.push_back(make_pair(value, START));
                                         break;
                     case 13:
                                         //_MARKER = value;
-                                        _map[_MARKER] = (char)MARKER;
+//                                        _map[_MARKER] = (char)MARKER;
+                                        schedule.push_back(make_pair(value, MARKER));
                                         break;
                     case 14:
-                                        _GO_DOWN = value;
-                                        _map[_GO_DOWN] = (char)GO_DOWN;
+//                                        _GO_DOWN = value;
+//                                        _map[_GO_DEEP] = (char)GO_DEEP;
+                                        schedule.push_back(make_pair(value, GO_UP));
                                         break;
                     case 15:
-                                        _FOLLOW_MARKER = value;
-                                        _map[_FOLLOW_MARKER] = (char)FOLLOW_MARKER;
+//                                        _FOLLOW_MARKER = value;
+//                                        _map[_FOLLOW_MARKER] = (char)FOLLOW_MARKER;
+                                        schedule.push_back(make_pair(value, FOLLOW_MARKER));
                                         break;
                     case 16:
-                                        _GO_FORWARD = value;
-                                        _map[_GO_FORWARD] = (char)GO_FORWARD;
+//                                        _GO_FORWARD = value;
+//                                        _map[_GO_FORWARD] = (char)GO_FORWARD;
+                                        schedule.push_back(make_pair(value, GO_FORWARD));
                                         break;
                     case 17:
-                                        _BUOY = value;
-                                        _map[_BUOY] = (char)BUOY;
+//                                        _BUOY = value;
+//                                        _map[_BUOY] = (char)BUOY;
+                                        schedule.push_back(make_pair(value, BUOY));
                                         break;
                     case 18:
-                                        _GO_BACK = value;
-                                        _map[_GO_BACK] = (char)GO_BACK;
+//                                        _GO_BACK = value;
+//                                        _map[_GO_BACK] = (char)GO_BACK;
+                                        schedule.push_back(make_pair(value, GO_BACK));
                                         break;
+
                     case 19:
-                                        _GO_UP = value;
-                                        _map[_GO_UP] = (char)GO_UP;
+                                        schedule.push_back(make_pair(value, GO_DOWN));
                                         break;
+
                     case 20:
-                                        _BIN = value;
-                                        _map[_BIN] = (char)BIN;
+//                                        _BIN = value;
+//                                        _map[_BIN] = (char)BIN;
+                                        schedule.push_back(make_pair(value, BIN));
+                                        break;
+                    case 21:
+                                        schedule.push_back(make_pair(value, GO_DEEP));
                                         break;
 				}
 			}
 		}
-
+        sort(schedule.begin(), schedule.end(), sortpair);
+        cout<<"Input values read.\n";
 	}
-	cout<<"Input values read.\n";
+
 	stream.close();
 }
 
@@ -102,13 +120,14 @@ void TASKS_PARAM::printVar(){
     cout<<"DEPTH_YELLOW_BUOY -"<<DEPTH_YELLOW_BUOY<<endl;
     cout<<"DEPTH_GREEN_BUOY -"<<DEPTH_GREEN_BUOY<<endl;
 	cout<<endl;
-        /*cout<<"START - "<<START<<endl;
+    cout<<"START - "<<START<<endl;
 	cout<<"MARKER - "<<MARKER<<endl;
-	cout<<"GO_DOWN - "<<GO_DOWN<<endl;
+    cout<<"GO_UP - "<<GO_UP<<endl;
 	cout<<"FOLLOW_MARKER - "<<FOLLOW_MARKER<<endl;
 	cout<<"GO_FORWARD - "<<GO_FORWARD<<endl;
 	cout<<"BUOY - "<<BUOY<<endl;
 	cout<<"GO_BACK - "<<GO_BACK<<endl;
-	cout<<"GO_UP - "<<GO_UP<<endl;
-        cout<<"BIN - "<<BIN<<endl;*/
+    cout<<"GO_DOWN - "<<GO_UP<<endl;
+    cout<<"BIN - "<<BIN<<endl;
+    cout<<"GO_DEEP - "<<GO_DEEP<<endl;
 }
