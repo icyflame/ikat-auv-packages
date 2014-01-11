@@ -23,7 +23,7 @@ BottomCam::BottomCam(int deviceIdno, const string &markerThresh, const string &b
         //cout<<thresholdValMarker[i]<<endl;
         fileBT >> thresholdValBin[i];
     }
-    markerData = n.advertise<ikat_ip_data::ip_marker_data>("MarkerData", 1);
+    markerData = n.advertise<ikat_ip_data::ip_marker_data>("markerData", 1);
     //binData = n.advertise<>
     elem = getStructuringElement(MORPH_RECT, Size(5,5));
     data = new markerDataStruct;
