@@ -6,8 +6,6 @@
 #include <task_planner_data/task_planner_data.h>
 #include <task_planner_data/controller_data.h>
 #include <task_planner/TASKS_PARAM.h>
-//#include <task_planner_data/task_planner_to_front_cam.h>
-//#include <task_planner_data/task_planner_to_bottom_cam.h>
 
 using namespace std;
 
@@ -44,129 +42,164 @@ int main(int argc, char **argv)
     ros::Rate loopRate(10);
     int count_marker=0;
 
-    cout<<"STARTING VEHICLE"<<endl;
-    choice.task_choice = START;
-    tasksPub.publish(choice);
-    while(ros::ok())
+    for(int i=0;i<inputObj.task_schedule.size();i++)
     {
-        ros::spinOnce();
-        if(countT >= inputObj.INTERVAL_VEHICLE_START * 10)
+        switch(inputObj.task_schedule[i].second)
         {
-            countT = 0;
-            break;
+                case START:
+                    cout<<"STARTING VEHICLE"<<endl;
+                    choice.task_choice = START;
+                    tasksPub.publish(choice);
+                    while(ros::ok())
+                    {
+                        ros::spinOnce();
+                        if(countT >= inputObj.INTERVAL_VEHICLE_START * 10)
+                        {
+                            countT = 0;
+                            break;
+                        }
+                        loopRate.sleep();
+                    }
+                    break;
+                case MARKER:
+                    cout<<"LOCKING MARKER"<<endl;
+                    choice.task_choice = MARKER;
+                    tasksPub.publish(choice);
+                    d.sleep();
+                    while(ros::ok())
+                    {
+                        ros::spinOnce();
+                        cout<<"MARKER ANGLE"<<controller_param[0]<<endl;
+                        if ((abs(controller_param[0])) < inputObj.MARKER_ANGLE_THRESHOLD && controller_param[0]!=0)
+                        {
+                            countT = 0;
+                            count_marker++;
+                            if (count_marker==1)
+                                break;
+                        }
+                        loopRate.sleep();
+                    }
+                    break;
+
+                case FOLLOW_MARKER:
+                    cout<<"MARKER LOCKED!!! FOLLOWING YAW ANGLE"<<endl;
+                    choice.task_choice = GO_HORIZONTAL;
+                    choice.task_param  = 2;
+                    tasksPub.publish(choice);
+                    while(ros::ok())
+                    {
+                        ros::spinOnce();
+                        if(countT >= inputObj.INTERVAL_MARKER_FOLLOWING * 10)
+                        {
+                            countT = 0;
+                            break;
+                        }
+                        loopRate.sleep();
+                    }
+                    break;
+
+                case GO_DOWN_MARKER:
+                    cout<<"MARKER DONE!!! GOING DOWN"<<endl;
+                    choice.task_choice = GO_DEPTH;
+                    choice.task_param  = 0.4;
+                    tasksPub.publish(choice);
+                    while(ros::ok())
+                    {
+                        ros::spinOnce();
+                        if(countT >= inputObj.INTERVAL_GO_DOWN_MARKER * 10)
+                        {
+                            countT = 0;
+                            break;
+                        }
+                        loopRate.sleep();
+                    }
+                    break;
+                case BUOY:
+                    cout<<"BUOY TOUCHING"<<endl;
+                    choice.task_choice = BUOY;
+                    tasksPub.publish(choice);
+                    d.sleep();
+                    while(ros::ok())
+                    {
+                        ros::spinOnce();
+                        cout<<"BUOY AREA:\t"<<controller_param[0]<<endl;
+                        if(controller_param[0]>inputObj.BUOY_AREA_THRESHOLD)
+                        {
+                            countT = 0;
+                            break;
+                        }
+                        loopRate.sleep();
+                    }
+                    break;
+
+                case HIT_BUOY:
+                    cout<<"HITTING BUOY"<<endl;
+                    choice.task_choice = GO_HORIZONTAL;
+                    choice.task_param = 2;
+                    tasksPub.publish(choice);
+                    while(ros::ok())
+                    {
+                        ros::spinOnce();
+                        if(countT >= inputObj.INTERVAL_HIT_BUOY * 10)
+                        {
+                            countT = 0;
+                            break;
+                        }
+                        loopRate.sleep();
+                    }
+                    break;
+
+                case GO_BACK_BUOY:
+                    cout<<"BUOY LOCKED RETREATING"<<endl;
+                    choice.task_choice = GO_HORIZONTAL;
+                    choice.task_param = -4;
+                    tasksPub.publish(choice);
+                    while(ros::ok())
+                    {
+                        ros::spinOnce();
+                        if(countT >= inputObj.INTERVAL_GO_BACK_BUOY * 10)
+                        {
+                            countT = 0;
+                            break;
+                        }
+                        loopRate.sleep();
+                    }
+                    break;
+
+                 case GO_UP_BUOY:
+                    cout<<"BUOY DONE!!! COMMING UP"<<endl;
+                    choice.task_choice = GO_DEPTH;
+                    choice.task_param  = 0.05;
+                    tasksPub.publish(choice);
+                    while(ros::ok())
+                    {
+                        ros::spinOnce();
+                        if(countT >= inputObj.INTERVAL_GO_UP_BUOY * 10)
+                        {
+                            countT = 0;
+                            break;
+                        }
+                        loopRate.sleep();
+                    }
+                    break;
+
+                case GO_OVER_BUOY:
+                    cout<<"GOING OVER BUOY"<<endl;
+                    choice.task_choice = GO_HORIZONTAL;
+                    choice.task_param  = 2;
+                    tasksPub.publish(choice);
+                    while(ros::ok())
+                    {
+                        ros::spinOnce();
+                        if(countT >= inputObj.INTERVAL_GO_OVER_BUOY * 10)
+                        {
+                            countT = 0;
+                            break;
+                        }
+                        loopRate.sleep();
+                    }
+                    break;
         }
-        loopRate.sleep();
-    }
-
-    
-    cout<<"LOCKING MARKER"<<endl;
-    choice.task_choice = MARKER;
-    tasksPub.publish(choice);
-    d.sleep();
-    while(ros::ok())
-    {
-        ros::spinOnce();
-        cout<<"MARKER ANGLE"<<controller_param[0]<<endl;
-        if ((abs(controller_param[0])) < inputObj.MARKER_ANGLE_THRESHOLD && controller_param[0]!=0)
-        {
-            countT = 0;
-            count_marker++;
-            if (count_marker==1)
-                break;
-        }
-        loopRate.sleep();
-    }
-
-
-    cout<<"MARKER LOCKED!!! FOLLOWING YAW ANGLE"<<endl;
-    choice.task_choice = GO_FORWARD;
-    tasksPub.publish(choice);
-    while(ros::ok())
-    {
-        ros::spinOnce();
-        if(countT >= inputObj.INTERVAL_MARKER_FOLLOWING * 10)
-        {
-            countT = 0;
-            break;
-        }
-        loopRate.sleep();
-    }
-
-
-    cout<<"MARKER DONE!!! GOING DOWN"<<endl;
-    choice.task_choice = GO_DOWN;
-    tasksPub.publish(choice);
-    while(ros::ok())
-    {
-        ros::spinOnce();
-        if(countT >= inputObj.INTERVAL_GOING_DOWN * 10)
-        {
-            countT = 0;
-            break;
-        }
-        loopRate.sleep();
-    }
-
-
-    cout<<"BUOY TOUCHING"<<endl;
-    choice.task_choice = BUOY;
-    tasksPub.publish(choice);
-    d.sleep();
-    while(ros::ok())
-    {
-        ros::spinOnce();
-        cout<<"BUOY AREA:\t"<<controller_param[0]<<endl;
-        if(controller_param[0]>inputObj.BUOY_AREA_THRESHOLD)
-        {
-            countT = 0;
-            break;
-        }
-        loopRate.sleep();
-    }
-
-
-    cout<<"HITTING BUOY"<<endl;
-    choice.task_choice = GO_FORWARD;
-    tasksPub.publish(choice);
-    while(ros::ok())
-    {
-        ros::spinOnce();
-        if(countT >= inputObj.INTERVAL_BUOY_HIT * 10)
-        {
-            countT = 0;
-            break;
-        }
-        loopRate.sleep();
-    }
-
-
-    cout<<"BUOY LOCKED RETREATING"<<endl;
-    choice.task_choice = GO_BACK;
-    tasksPub.publish(choice);
-    while(ros::ok())
-    {
-        ros::spinOnce();
-        if(countT >= inputObj.INTERVAL_BUOY_RETREATING * 10)
-        {
-            countT = 0;
-            break;
-        }
-        loopRate.sleep();
-    }
-
-
-    cout<<"BUOY DONE!!! COMMING UP"<<endl;
-    choice.task_choice = GO_UP;
-    tasksPub.publish(choice);
-    while(ros::ok())
-    {
-        ros::spinOnce();
-        if(countT >= inputObj.INTERVAL_RISE_UP * 10)
-        {
-            countT = 0;
-            break;
-        }
-        loopRate.sleep();
     }
 
 

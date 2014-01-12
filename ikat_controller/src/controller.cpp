@@ -34,7 +34,7 @@ using namespace ikat_hardware;
 DepthController depthobj;
 YawController yawobj;
 ImageController imageControllerObj;
-float x_buoy,y_buoy,area_buoy,x_marker,y_marker,angle_marker;
+float x_buoy,y_buoy,area_buoy,x_marker,y_marker,angle_marker,task_param;
 float mt9_data[3]={0};
 float depth_sensor_data=0;
 char  task=100;
@@ -51,6 +51,7 @@ void buoyDetectCallback(const ikat_ip_data::ip_buoy_data::ConstPtr &msg)
 void taskPlannerCallback(const task_planner_data::task_planner_data::ConstPtr &msg)
 {
     task=msg->task_choice;
+    task_param=msg->task_param;
 }
 
 void markerDetectCallback(const ikat_ip_data::ip_marker_data::ConstPtr &msg)
@@ -163,22 +164,22 @@ int main(int argc, char **argv)
                     prev_task_yaw=mt9_data[2];
                     prev_task_depth=depth_sensor_data;
                     break;
-            case GO_FORWARD:
+            case GO_HORIZONTAL:
                     thrusterData.heaveThrust= depthobj.depthController(prev_task_depth);
-                    yawobj.horizontal_speed=2;
+                    yawobj.horizontal_speed=task_param;
                     yawobj.yawController(prev_task_yaw,buff);
                     thrusterData.surgeLeft=buff[0];
                     thrusterData.surgeRight=buff[1];
                     thrusterPub.publish(thrusterData);
                     break;
-            case GO_DOWN:
-                    thrusterData.heaveThrust= depthobj.depthController(0.4);
+            case GO_DEPTH:
+                    thrusterData.heaveThrust= depthobj.depthController(task_param);
                     yawobj.horizontal_speed=0;
                     yawobj.yawController(prev_task_yaw,buff);
                     thrusterData.surgeLeft=buff[0];
                     thrusterData.surgeRight=buff[1];
                     thrusterPub.publish(thrusterData);
-                    prev_task_depth=0.4;
+                    prev_task_depth=task_param;
                     break;
             case BUOY:
                     imageControllerObj.horizontal_speed=0;
@@ -193,22 +194,6 @@ int main(int argc, char **argv)
                     taskPlannerPub.publish(controllerData);
                     prev_task_yaw=mt9_data[2];
                     prev_task_depth=depth_sensor_data;
-                    break;
-            case GO_BACK:
-                    thrusterData.heaveThrust= depthobj.depthController(prev_task_depth);
-                    yawobj.horizontal_speed=-4;
-                    yawobj.yawController(prev_task_yaw,buff);
-                    thrusterData.surgeLeft=buff[0];
-                    thrusterData.surgeRight=buff[1];
-                    thrusterPub.publish(thrusterData);
-                    break;
-            case GO_UP:
-                    thrusterData.heaveThrust= depthobj.depthController(0.05);
-                    yawobj.horizontal_speed=0;
-                    yawobj.yawController(prev_task_yaw,buff);
-                    thrusterData.surgeLeft=buff[0];
-                    thrusterData.surgeRight=buff[1];
-                    thrusterPub.publish(thrusterData);
                     break;
             default:
                     thrusterData.heaveThrust= 0;
@@ -228,8 +213,3 @@ int main(int argc, char **argv)
       delete(buff);
       return 0;
 }
-//area ratio
-//depth
-//bounding box
-//y coordinate less than half
-//
