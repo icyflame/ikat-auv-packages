@@ -1,0 +1,21 @@
+<package>
+  <description brief="buoy_ml_datagen">
+
+     buoy_ml_datagen
+
+  </description>
+  <author>Madhukar</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/buoy_ml_datagen</url>
+  <depend package="roscpp"/>
+  <depend package="rospy"/>
+  <depend package="std_msgs"/>
+  <depend package="opencv2"/>
+  <depend package="blob"/>
+  <depend package="ikat_sensor_data"/>
+  <depend package="ikat_ip_data"/>
+
+</package>
+
+
